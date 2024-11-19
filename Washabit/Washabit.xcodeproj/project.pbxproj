@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A232A102CDB157800706963 /* AddHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A232A0F2CDB155F00706963 /* AddHabitView.swift */; };
+		7A232A122CE78C9C00706963 /* CustomDatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A232A112CE78C8500706963 /* CustomDatePickerView.swift */; };
 		9ACA482C2CD9BF1F000D4D4B /* WashabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA482B2CD9BF1F000D4D4B /* WashabitApp.swift */; };
 		9ACA482E2CD9BF1F000D4D4B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA482D2CD9BF1F000D4D4B /* ContentView.swift */; };
 		9ACA48302CD9BF21000D4D4B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9ACA482F2CD9BF21000D4D4B /* Assets.xcassets */; };
@@ -34,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7A232A0F2CDB155F00706963 /* AddHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHabitView.swift; sourceTree = "<group>"; };
+		7A232A112CE78C8500706963 /* CustomDatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDatePickerView.swift; sourceTree = "<group>"; };
 		9ACA48282CD9BF1F000D4D4B /* Washabit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Washabit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ACA482B2CD9BF1F000D4D4B /* WashabitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WashabitApp.swift; sourceTree = "<group>"; };
 		9ACA482D2CD9BF1F000D4D4B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -94,8 +98,10 @@
 		9ACA482A2CD9BF1F000D4D4B /* Washabit */ = {
 			isa = PBXGroup;
 			children = (
+				7A232A112CE78C8500706963 /* CustomDatePickerView.swift */,
 				9ACA482B2CD9BF1F000D4D4B /* WashabitApp.swift */,
 				9ACA482D2CD9BF1F000D4D4B /* ContentView.swift */,
+				7A232A0F2CDB155F00706963 /* AddHabitView.swift */,
 				9ACA482F2CD9BF21000D4D4B /* Assets.xcassets */,
 				9ACA48312CD9BF21000D4D4B /* Preview Content */,
 			);
@@ -259,6 +265,8 @@
 			files = (
 				9ACA482E2CD9BF1F000D4D4B /* ContentView.swift in Sources */,
 				9ACA482C2CD9BF1F000D4D4B /* WashabitApp.swift in Sources */,
+				7A232A102CDB157800706963 /* AddHabitView.swift in Sources */,
+				7A232A122CE78C9C00706963 /* CustomDatePickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
