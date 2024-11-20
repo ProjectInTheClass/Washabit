@@ -23,7 +23,6 @@ struct HabitData:Identifiable {
 struct Daily {
     var count: Int = 0 // 시행횟수
     var image: String // 이미지이름
-    
     init(value: Int, imageName: String)
     {
         self.count = value
@@ -79,6 +78,77 @@ func daysDifference(date1: Date, date2: Date) -> Int
     return ret.day ?? 0
 }
 
+struct WaterFillView: View {
+    @Binding var progress: CGFloat // 0.0 ~ 1.0 목표 달성 비율
+    @State private var waveOffset: CGFloat = 0.0 // 물결 애니메이션 오프셋
+    
+    var body: some View {
+        ZStack {
+            Circle() //터치 구역 확대
+                .fill(Color.gray.opacity(0.1))
+                .frame(width: 213, height: 213)
+    
+            // 물결 효과
+            WaterShape(level: progress, waveOffset: waveOffset)
+                .fill(LinearGradient(
+                    gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                ))
+                .frame(width: 200, height: 200)
+                .clipShape(Circle()) // 물결이 원 안에만 나타나도록 설정
+                .animation(.easeInOut(duration: 0.8), value: progress)
+            
+            Circle()
+                .strokeBorder(Color.blue.opacity(0.3), lineWidth: 10)
+                .background(Circle().fill(Color.clear))
+                .frame(width: 215, height: 215)
+        }
+        .onAppear {
+                    // waveOffset을 반복적으로 업데이트
+                    Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { _ in
+                        waveOffset += 0.07 // waveOffset을 조금씩 증가시켜 물결이 계속 움직이도록 설정
+                        // 물결이 올라가도 계속움직이기 위함
+                    }
+                }
+    }
+}
+
+
+struct WaterShape: Shape {
+    var level: CGFloat // 물 높이 (0.0 ~ 1.0)
+    var waveOffset: CGFloat // 물결 애니메이션 오프셋
+    
+    var animatableData: AnimatablePair<CGFloat, CGFloat> {
+        get { AnimatablePair(level, waveOffset) }
+        set {
+            level = newValue.first
+            waveOffset = newValue.second
+        }
+    }
+    
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let waterHeight = rect.height * (1.0 - level)
+        
+        path.move(to: CGPoint(x: 0, y: rect.height))
+        path.addLine(to: CGPoint(x: 0, y: waterHeight))
+        
+        //let waveWidth = rect.width / 10
+        for x in stride(from: 0.0, to: Double(rect.width), by: 1.0) {
+            let relativeX = CGFloat(x) / rect.width
+            let yOffset = sin(relativeX * .pi * 2 + waveOffset) * 10
+            path.addLine(to: CGPoint(x: CGFloat(x), y: waterHeight + yOffset))
+        }
+        
+        path.addLine(to: CGPoint(x: rect.width, y: rect.height))
+        path.closeSubpath()
+        
+        return path
+    }
+}
+
+
 
 
 struct SwiftMainView: View {
@@ -91,47 +161,49 @@ struct SwiftMainView: View {
     
     // UI
     @State private var selectedTab = 0
+    
     var body: some View {
-        Button("Button") {
-            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
-        }.offset(x: 140, y: -10)
-        Button("New Habit") {
-            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
-        }.offset(x: 140, y: 450)
-        
-        TabView {
-            ForEach(habitData.indices, id:\.self) { index in
-                ZStack{  //앞 뒷면 컨텐츠를 Z스택으로 구분
-                    if !habitData[index].isFlipped
-                    {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.1)) // 배경 색 설정
-                            .frame(width: 400, height: 400)
-                            .overlay{
-                                Circle()
-                                    .fill(Color.blue)
+            TabView {
+                ForEach(habitData.indices, id: \.self) { index in
+                    ZStack {
+                        if !habitData[index].isFlipped {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.1))
+                                .frame(width: 400, height: 400)
+                                .overlay {
+                                    WaterFillView(progress: Binding(
+                                        get: {
+                                            if CGFloat(habitData[index].daily[1].count) >= CGFloat(habitData[index].goal) {
+                                                return 0.9
+                                            }
+                                            else {
+                                                return CGFloat(habitData[index].daily[1].count) / CGFloat(habitData[index].goal) * 0.8 + 0.1
+                                            }
+                                        },
+                                        set: { newValue in
+                                            habitData[index].daily[1].count = Int((newValue+0.1) * CGFloat(habitData[index].goal))
+                                        }
+                                    ))
                                     .frame(width: 200, height: 200)
                                     .onTapGesture {
                                         habitData[index].daily[1].count += 1
                                     }
-                                    .onLongPressGesture
-                                {
-                                    if habitData[index].daily[1].count  > 0
-                                    {
-                                        habitData[index].daily[1].count += -1
+                                    .onLongPressGesture {
+                                        if habitData[index].daily[1].count > 0 {
+                                            habitData[index].daily[1].count -= 1
+                                        }
                                     }
+                                    
+                                    Text(habitData[index].title)
+                                        .font(.title)
+                                        .padding()
+                                        .offset(x:-60, y:-140)
+                                        Text("\(habitData[index].daily[1].count) / \(habitData[index].goal)") // 위치 조절 필요 ???
+                                        .font(.body)
+                                        .padding()
+                                        .offset(x:-100, y:-100)
                                 }
-                                Spacer()
-                                Text(habitData[index].title)
-                                    .font(.title)
-                                    .padding()
-                                    .offset(x:-60, y:-140)
-                                Text("\(habitData[index].daily[1].count) / \(habitData[index].goal)") // 위치 조절 필요
-                                    .font(.body)
-                                    .padding()
-                                    .offset(x:-100, y:-100)
-                            }
-                    }
+                        }
                     else // 뒷면
                     {
                         Rectangle()
@@ -161,6 +233,7 @@ struct SwiftMainView: View {
                                     .offset(x:-90, y:-80)
                                 let tmp1 = habitData[index].startDate.toString()
                                 let tmp2 = habitData[index].endDate.toString()
+                                
                                 Text("\(tmp1) \n~ \(tmp2)")
                                     .font(.body)
                                     .padding()
@@ -203,3 +276,4 @@ struct SwiftMainView: View {
 #Preview {
     SwiftMainView()
 }
+

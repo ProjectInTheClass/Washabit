@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Washabit
-//
-//  Created by 강현중 on 11/5/24.
-//
-
 import SwiftUI
 
 struct ContentView: View {
