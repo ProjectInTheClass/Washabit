@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct WashabitApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SwiftMainView()
+                .modelContainer(for: [HabitData.self, Daily.self]) // 등록된 모델 추가
         }
     }
 }
+
