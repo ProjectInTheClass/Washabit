@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 func recentTwoWeeksDates() -> [Date] {
     let calendar = Calendar.current
     let today = Date()

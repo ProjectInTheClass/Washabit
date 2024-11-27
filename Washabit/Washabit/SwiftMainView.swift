@@ -8,65 +8,111 @@ struct SwiftMainView: View {
     @Query private var habits: [HabitData]
 
     var body: some View {
-        Button("새 목표 추가") {
-            let startDate = Date().addingTimeInterval(-3 * 24 * 60 * 60)
-                    let endDate = Date().addingTimeInterval(3 * 24 * 60 * 60)
-            HabitManager.addNewHabit(
-                          "New Habit",
-                          5,
-                          startDate,
-                          endDate,
-                          to: modelContext
-                      )
-                }
-                .offset(x: 0, y: -100)
-                
-                Button("목표 삭제") {
-                    HabitManager.deleteHabit(habits[0], to: modelContext)
-                }
-                .offset(x: 0, y: -150)
-        if habits.isEmpty {
-            Rectangle()
-                .fill(Color.gray.opacity(0.1))
-                .frame(width: 350, height: 350)
-                .overlay {
-                    Text("아직 목표가 없습니다. 추가하세요!")
-                }
-        } else {
-            TabView {
-                ForEach(habits) { habit in
-                    // endDate가 오늘을 기준으로 지난 목표는 표시하지 않음
-                    if habit.endDate >= Date() {
-                        ZStack {
-                            if !habit.isFlipped {
-                                frontHabitView(habit: habit)
-                            } else {
-                                backHabitView(habit: habit)
-                            }
+        ZStack {
+            VStack {
+                // 삭제 버튼 (위쪽)
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        if !habits.isEmpty {
+                            HabitManager.deleteHabit(habits[0], to: modelContext)
+                        } else {
+                            print("삭제할 목표가 없습니다.")
                         }
-                        .rotation3DEffect(
-                            .degrees(habit.isFlipped ? 180 : 0),
-                            axis: (x: 0, y: 1, z: 0),
-                            perspective: 0.5
-                        )
-                        .onTapGesture {
-                            if selectedDate != nil {
-                                selectedDate = nil
-                            } else {
-                                // 팝업이 닫혀 있으면 상태를 변경
-                                withAnimation {
-                                    habit.isFlipped.toggle()
+                    }) {
+                        Label("목표 삭제", systemImage: "trash")
+                            .font(.headline)
+                            .padding(10)
+                            .background(Color.red.opacity(0.8))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .padding(.top, 20)
+                    .padding(.trailing, 20)
+                }
+
+                Spacer()
+
+                // 탭 뷰 (중앙)
+                if habits.isEmpty {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.1))
+                        .frame(width: 350, height: 350)
+                        .overlay {
+                            Text("아직 목표가 없습니다. 추가하세요!")
+                        }
+                } else {
+                    TabView {
+                        ForEach(habits) { habit in
+                            // endDate가 오늘을 기준으로 지난 목표는 표시하지 않음
+                            if habit.endDate >= Date() {
+                                ZStack {
+                                    if !habit.isFlipped {
+                                        frontHabitView(habit: habit)
+                                    } else {
+                                        backHabitView(habit: habit)
+                                    }
+                                }
+                                .rotation3DEffect(
+                                    .degrees(habit.isFlipped ? 180 : 0),
+                                    axis: (x: 0, y: 1, z: 0),
+                                    perspective: 0.5
+                                )
+                                .onTapGesture {
+                                    if selectedDate != nil {
+                                        selectedDate = nil
+                                    } else {
+                                        // 팝업이 닫혀 있으면 상태를 변경
+                                        withAnimation {
+                                            habit.isFlipped.toggle()
+                                        }
+                                    }
                                 }
                             }
                         }
+                    }.onAppear {
+                        for habit in habits {
+                            if habit.isFlipped {
+                                habit.isFlipped = false
+                                HabitManager.saveContext(modelContext)
+                            }
+                        }
                     }
+                    .frame(width: 350, height: 420)
+                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+                }
+
+                Spacer()
+
+                // 추가 버튼 (아래쪽)
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        let startDate = Date().addingTimeInterval(-3 * 24 * 60 * 60)
+                        let endDate = Date().addingTimeInterval(3 * 24 * 60 * 60)
+                        HabitManager.addNewHabit(
+                            "New Habit",
+                            5,
+                            startDate,
+                            endDate,
+                            to: modelContext
+                        )
+                    }) {
+                        Label("새 목표 추가", systemImage: "plus")
+                            .font(.headline)
+                            .padding(10)
+                            .background(Color.blue.opacity(0.8))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .padding(.bottom, 20)
+                    .padding(.trailing, 20)
                 }
             }
-            .frame(width: 350, height: 420)
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
         }
     }
-
+    
+    
     @State private var selectedDate: Date? = nil // 선택된 날짜
     
 
@@ -84,146 +130,170 @@ struct SwiftMainView: View {
 
 
     func frontHabitView(habit: HabitData) -> some View {
-        Rectangle()
-            .fill(Color.gray.opacity(0.1))
-            .frame(width: 350, height: 350)
-            .overlay {
-                // 날짜가 오늘인 데이터만 표시
-                if let todayDaily = habit.sortedDaily.first(where: { Calendar.current.isDate($0.date, inSameDayAs: Date()) }) {
-                    WaterFillView(progress: Binding(
-                        get: {
-                            CGFloat(todayDaily.count) / CGFloat(habit.goal)
-                        },
-                        set: { newValue in
-                            todayDaily.count = Int(newValue * CGFloat(habit.goal))
+        GeometryReader { geometry in
+            VStack {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.gray.opacity(0.1))
+                        .frame(width: geometry.size.width * 0.9)
+                    
+                    if let todayDaily = habit.sortedDaily.first(where: {
+                        Calendar.current.isDate($0.date, inSameDayAs: Date())
+                    }) {
+                        VStack {
+                            WaterFillView(progress: Binding(
+                                get: {
+                                    CGFloat(todayDaily.count) / CGFloat(habit.goal)
+                                },
+                                set: { newValue in
+                                    todayDaily.count = Int(newValue * CGFloat(habit.goal))
+                                }
+                            ))
+                            .frame(width: geometry.size.width * 0.6)
+                            
+                            VStack(spacing: 10) {
+                                Text(habit.title)
+                                    .font(.system(size: geometry.size.width * 0.06, weight: .bold))
+                                    .padding(.top)
+                                
+                                Text("\(todayDaily.count) / \(habit.goal)")
+                                    .font(.system(size: geometry.size.width * 0.05))
+                                    .foregroundColor(.blue)
+                            }
                         }
-                    ))
-                    .frame(width: 200, height: 200)
-                    .onTapGesture {
-                        todayDaily.count += 1
-                        HabitManager.saveContext(modelContext)
-                    }
-                    .onLongPressGesture {
-                        if todayDaily.count > 0 {
-                            todayDaily.count -= 1
+                        .padding()
+                        .onTapGesture {
+                            todayDaily.count += 1
                             HabitManager.saveContext(modelContext)
                         }
+                        .onLongPressGesture {
+                            if todayDaily.count > 0 {
+                                todayDaily.count -= 1
+                                HabitManager.saveContext(modelContext)
+                            }
+                        }
                     }
-                    
-                    Text(habit.title)
-                        .font(.title)
-                        .padding()
-                        .offset(x: -60, y: -140)
-                    
-                    Text("\(todayDaily.count) / \(habit.goal)")
-                        .font(.body)
-                        .padding()
-                        .foregroundColor(.blue)
-                        .offset(x: -100, y: -100)
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
     }
-
-
-
 
     func backHabitView(habit: HabitData) -> some View {
-        ZStack {
-            // 뒷면 전체 배경
-            Rectangle()
-                .fill(Color.gray.opacity(0.1))
-                .frame(width: 350, height: 350)
-                .onTapGesture {
-                    if selectedDate != nil {
-                        // 팝업이 열려 있으면 닫기
-                        withAnimation {
-                            selectedDate = nil
+        GeometryReader { geometry in
+            let cardWidth = geometry.size.width * 0.9
+            let cardHeight = geometry.size.height * 0.8
+
+            ZStack {
+                // 카드 배경
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color.gray.opacity(0.1))
+                    .frame(width: cardWidth, height: cardHeight)
+
+                VStack(spacing: 20) {
+                    // 상단: 이미지와 타이틀
+                    VStack {
+                        if let firstDaily = habit.sortedDaily.first {
+                            Image(firstDaily.image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: cardWidth * 0.3, height: cardWidth * 0.3)
+                                .clipShape(Circle())
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.blue, lineWidth: 2)
+                                )
                         }
-                    } else {
-                        // 팝업이 닫혀 있으면 앞면으로 전환
-                        withAnimation {
-                            habit.isFlipped = false
+
+                        Text(habit.title)
+                            .font(.system(size: cardWidth * 0.06, weight: .bold))
+                            .padding(.top, 10)
+                        let consecutiveDays = habit.consecutiveAchievedDays()
+                        if consecutiveDays == 0
+                        {
+                            Text("오늘의 목표를 달성해 보세요!")
+                                .font(.system(size: cardWidth * 0.05, weight: .bold))
+                                .foregroundColor(.orange)
+                        }
+                        else{
+                            Text("🔥 \(consecutiveDays)일 연속 달성 중!")
+                                .font(.system(size: cardWidth * 0.05, weight: .bold))
+                                .foregroundColor(.orange)
                         }
                     }
-                }
-            
-            VStack(spacing: 16) {
-                // 진행 퍼센트 계산
-                let totalDays = max(1, daysDifference(date1: habit.startDate, date2: habit.endDate + 1))
-                let elapsedDays = max(0, daysDifference(date1: habit.startDate, date2: Date()) + 1)
-                let percentage = String(format: "%.1f", Double(elapsedDays) / Double(totalDays) * 100)
-                
-                Text("\(percentage)%")
-                    .font(.title)
-                    .bold()
-                
-                ProgressView(value: Double(elapsedDays), total: Double(totalDays))
-                    .progressViewStyle(LinearProgressViewStyle(tint: .red))
-                    .frame(width: 240)
-                
-                Text("\(habit.startDate.toString()) ~ \(habit.endDate.toString())")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                
-                // 최근 2주 날짜 그리드
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 8) {
-                    ForEach(recentTwoWeeksDates(), id: \.self) { date in
-                        let isBeforeStart = date < habit.startDate
+
+                    // 진행률
+                    VStack(spacing: 8) {
+                        let totalDays = max(1, daysDifference(date1: habit.startDate, date2: habit.endDate.addingTimeInterval(24 * 60 * 60)))
+                        let elapsedDays = max(0, daysDifference(date1: habit.startDate, date2: min(Date(), habit.endDate).addingTimeInterval(24 * 60 * 60)))
+                        let percentage = String(format: "%.1f", Double(elapsedDays) / Double(totalDays) * 100)
                         
-                        ZStack {
-                            Button {
-                                if !isBeforeStart {
-                                    selectedDate = (selectedDate == date) ? nil : date
+                        Text("진행률: \(percentage)%")
+                            .font(.system(size: cardWidth * 0.05))
+                            .foregroundColor(.blue)
+
+                        ProgressView(value: Double(elapsedDays), total: Double(totalDays))
+                            .progressViewStyle(LinearProgressViewStyle(tint: .blue))
+                            .frame(width: cardWidth * 0.8)
+
+                        Text("\(habit.startDate.toString()) ~ \(habit.endDate.toString())")
+                            .font(.system(size: cardWidth * 0.04))
+                            .foregroundColor(.gray)
+                    }
+
+                    // 하단: 2주간의 버튼 배열
+                    ZStack {
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 5), count: 7), spacing: 10) {
+                                             ForEach(recentTwoWeeksDates(), id: \.self) { date in
+                                                 let daily = habit.sortedDaily.first { Calendar.current.isDate($0.date, inSameDayAs: date) }
+                                                 let isCompleted = daily?.count ?? 0 >= habit.goal
+                                                 
+                                                 Button(action: {
+                                                     if date >= habit.startDate {
+                                                         selectedDate = (selectedDate == date) ? nil : date
+                                                     }
+                                                 }) {
+                                                     Circle()
+                                                         .fill(date < habit.startDate ? Color.gray.opacity(0.4) : (isCompleted ? Color.teal : Color.red.opacity(0.5)))
+                                                         .frame(width: cardWidth * 0.1, height: cardWidth * 0.1)
+                                                         .overlay(
+                                                             Text(formattedDate(date: date))
+                                                                 .font(.system(size: cardWidth * 0.035))
+                                                                 .foregroundColor(.white)
+                                                         )
+                                                         .opacity(date < habit.startDate ? 0.5 : 1.0)
+                                                 }
+                                                 .disabled(date < habit.startDate)
+                                             }
+                        }
+                        .padding(.horizontal, 10)
+
+                        // 팝업
+                        if let selectedDate = selectedDate,
+                           let daily = habit.sortedDaily.first(where: { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }) {
+                            CountAdjustPopoverView(
+                                habit: habit,
+                                daily: daily,
+                                onClose: {
+                                    withAnimation { self.selectedDate = nil }
                                 }
-                            } label: {
-                                Text(formattedDate(date: date))
-                                    .frame(width: 40, height: 40)
-                                    .background(isBeforeStart ? Color.gray.opacity(0.4) : Color.blue)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(8)
-                                    .opacity(isBeforeStart ? 0.5 : 1.0)
-                            }
-                            .disabled(isBeforeStart)
+                            )
+                            .frame(width: cardWidth * 0.85)
+                            .offset(y: -geometry.size.height * 0.15) // 팝업 위치를 버튼 배열 바로 위로 설정
+                            .transition(.scale)
+                            .zIndex(1)
                         }
                     }
                 }
-                .frame(width: 300, height: 200) // 고정된 크기
+                .padding(20)
             }
-            .padding()
-            .frame(maxHeight: .infinity)
-
-            // 팝업을 LazyVGrid 밖으로 이동
-            if let selectedDate = selectedDate {
-                if let daily = habit.sortedDaily.first(where: { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }) {
-                    CountAdjustPopoverView(
-                        habit: habit,
-                        daily: daily,
-                        onClose: {
-                            withAnimation {
-                                self.selectedDate = nil
-                            }
-                        }
-                    )
-                    .offset(y: -60)
-                    .transition(.scale)
-                    .zIndex(1) // 팝업을 그리드 위에 띄우기
-                }
-            }
-
-            // 이미지
-            if let firstDaily = habit.sortedDaily.first {
-                Image(firstDaily.image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 120, height: 120)
-                    .offset(x: 100, y: -100)
-            }
+            .rotation3DEffect(
+                .degrees(habit.isFlipped ? 180 : 0),
+                axis: (x: 0, y: 1, z: 0)
+            )
         }
-        .rotation3DEffect(
-            .degrees(habit.isFlipped ? 180 : 0),
-            axis: (x: 0, y: 1, z: 0)
-        )
     }
+
 
 
 
