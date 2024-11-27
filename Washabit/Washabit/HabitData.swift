@@ -6,6 +6,7 @@
 //
 
 import SwiftData
+import SwiftUI
 import Foundation
 
 /// HabitData 모델: 사용자가 설정한 목표를 관리
@@ -50,3 +51,29 @@ class Daily: Identifiable {
         self.date = date
     }
 }
+
+extension HabitData {
+    /// 오늘을 기준으로 몇 일 연속 목표를 달성했는지 계산
+    func consecutiveAchievedDays() -> Int {
+        let today = Date()
+        var consecutiveDays = 0
+        
+        // 정렬된 Daily 데이터를 역순으로 순회
+        for daily in sortedDaily.reversed() {
+            if Calendar.current.isDateInToday(daily.date) || Calendar.current.isDate(daily.date, inSameDayAs: today.addingTimeInterval(-Double(consecutiveDays) * 24 * 60 * 60)) {
+                // 목표 달성 여부 확인
+                if daily.count >= goal {
+                    consecutiveDays += 1
+                } else {
+                    break // 연속 달성이 끊기면 종료
+                }
+            }
+        }
+        
+        return consecutiveDays
+    }
+}
+
+
+
+
