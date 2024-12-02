@@ -16,22 +16,27 @@ struct FeedView: View {
                     .frame(width:38, height:38)
                     .cornerRadius(12)
                     .shadow(color: Color.black.opacity(0.25), radius: 8, x: 0, y: 2)
+                    .padding(.leading,20)
                     Spacer()
                 }
                 HStack{
                     Text("<\(title)> 피드")
                         .font(.system(size: 20, weight: .bold))
                         .foregroundColor(Color("StrongGray"))
+                        .padding(.leading,20)
                     Spacer()
                     Text("모아보기>")
                         .font(.system(size:14))
                         .underline()
                         .foregroundColor(Color("StrongGray"))
+                        .padding(.trailing,20)
                 }
                 .padding(.top, 15)
                 
-                WeeklyCalendarView()
-                    .padding(.bottom,15)
+                
+                ExpandableCalendar()
+                    .frame(width:375)
+                    .padding([.top, .bottom],15)
                 
                 ScrollFeedView()
                 
