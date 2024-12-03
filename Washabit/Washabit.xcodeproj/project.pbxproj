@@ -18,6 +18,8 @@
 		9ACA8C862CF338170070611C /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA8C852CF338170070611C /* Utility.swift */; };
 		9ACA8C882CF3382B0070611C /* HabitData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA8C872CF3382B0070611C /* HabitData.swift */; };
 		9ACA8C8C2CF33AAF0070611C /* HabitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA8C8B2CF33AAF0070611C /* HabitManager.swift */; };
+		9ACA8CA22CFEC3690070611C /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA8CA12CFEC3690070611C /* FeedView.swift */; };
+		9ACA8CA42CFEC3930070611C /* ExpandableCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA8CA32CFEC3930070611C /* ExpandableCalendar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +54,8 @@
 		9ACA8C852CF338170070611C /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		9ACA8C872CF3382B0070611C /* HabitData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitData.swift; sourceTree = "<group>"; };
 		9ACA8C8B2CF33AAF0070611C /* HabitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitManager.swift; sourceTree = "<group>"; };
+		9ACA8CA12CFEC3690070611C /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
+		9ACA8CA32CFEC3930070611C /* ExpandableCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableCalendar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,10 +108,12 @@
 			children = (
 				9A115D0C2CDB093000736B21 /* SwiftMainView.swift */,
 				9ACA8C852CF338170070611C /* Utility.swift */,
+				9ACA8CA32CFEC3930070611C /* ExpandableCalendar.swift */,
 				9ACA8C872CF3382B0070611C /* HabitData.swift */,
 				9ACA482B2CD9BF1F000D4D4B /* WashabitApp.swift */,
 				9ACA482D2CD9BF1F000D4D4B /* ContentView.swift */,
 				9ACA8C8B2CF33AAF0070611C /* HabitManager.swift */,
+				9ACA8CA12CFEC3690070611C /* FeedView.swift */,
 				9ACA482F2CD9BF21000D4D4B /* Assets.xcassets */,
 				9ACA48312CD9BF21000D4D4B /* Preview Content */,
 			);
@@ -269,6 +275,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9ACA8CA22CFEC3690070611C /* FeedView.swift in Sources */,
+				9ACA8CA42CFEC3930070611C /* ExpandableCalendar.swift in Sources */,
 				9ACA8C8C2CF33AAF0070611C /* HabitManager.swift in Sources */,
 				9ACA8C862CF338170070611C /* Utility.swift in Sources */,
 				9ACA482E2CD9BF1F000D4D4B /* ContentView.swift in Sources */,
