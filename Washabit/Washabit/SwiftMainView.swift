@@ -207,8 +207,10 @@ struct SwiftMainView: View {
                                 .progressViewStyle(LinearProgressViewStyle(tint: .blue))
                                 .frame(width: cardWidth * 0.6)
                         }
-                        if let firstDaily = habit.sortedDaily.first {
-                                               Image(firstDaily.image)
+                        if let todayDaily = habit.sortedDaily.first(where: {
+                            Calendar.current.isDate($0.date, inSameDayAs: Date())
+                        }) {
+                                               Image(todayDaily.image)
                                                    .resizable()
                                                    .scaledToFit()
                                                    .frame(width: cardWidth * 0.3, height: cardWidth * 0.3)
@@ -257,7 +259,6 @@ struct SwiftMainView: View {
                 .animation(.easeInOut(duration: 0.3), value: selectedDate)
 
             VStack(spacing: 20) {
-                // 헤더
                 Text("최근 2주간의 기록")
                     .frame(width: cardWidth * 0.9, alignment: .topLeading)
                     .foregroundColor(.white)
