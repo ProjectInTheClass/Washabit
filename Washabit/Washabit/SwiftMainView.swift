@@ -131,48 +131,41 @@ struct SwiftMainView: View {
     func frontHabitView(habit: HabitData) -> some View {
         GeometryReader { geometry in
             let cardWidth = geometry.size.width * 0.9
-                    let cardHeight = geometry.size.height * 0.85 // 추가
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 15)
-                            .fill(Color.white)
-                            .frame(width: cardWidth, height: cardHeight) // 동일 크기 설정
+            ZStack {
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color.white)
+                    .shadow(radius: 5)
 
-                if let todayDaily = habit.sortedDaily.first(where: {
-                    Calendar.current.isDate($0.date, inSameDayAs: Date())
-                }) {
-                    VStack {
+                VStack(spacing: 20) {
+                    Text(habit.title)
+                        .font(.system(size: cardWidth * 0.06, weight: .bold))
+                        .padding(.top)
+
+                    if let todayDaily = habit.sortedDaily.first(where: {
+                        Calendar.current.isDate($0.date, inSameDayAs: Date())
+                    }) {
                         WaterFillView(progress: Binding(
-                            get: {
-                                CGFloat(todayDaily.count) / CGFloat(habit.goal)
-                            },
+                            get: { CGFloat(todayDaily.count) / CGFloat(habit.goal) },
                             set: { newValue in
                                 todayDaily.count = Int(newValue * CGFloat(habit.goal))
                             }
                         ))
                         .frame(width: cardWidth * 0.6)
-
-                        VStack(spacing: 10) {
-                            Text(habit.title)
-                                .font(.system(size: cardWidth * 0.06, weight: .bold))
-                                .padding(.top)
-                            
-                            Text("\(todayDaily.count) / \(habit.goal)")
-                                .font(.system(size: cardWidth * 0.05))
-                                .foregroundColor(.blue)
+                        .onTapGesture {
+                            todayDaily.count = todayDaily.count+1
                         }
-                    }
-                    .padding()
-                    .onTapGesture {
-                        todayDaily.count += 1
-                        HabitManager.saveContext(modelContext)
-                    }
-                    .onLongPressGesture {
-                        if todayDaily.count > 0 {
-                            todayDaily.count -= 1
-                            HabitManager.saveContext(modelContext)
+                        .onLongPressGesture{
+                            todayDaily.count = todayDaily.count-1
                         }
+                        
+                        
+                        Text("\(todayDaily.count) / \(habit.goal)")
+                            .font(.system(size: cardWidth * 0.05))
+                            .foregroundColor(.blue)
+                            .padding(.top)
                     }
                 }
+                .padding()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -181,200 +174,190 @@ struct SwiftMainView: View {
     func backHabitView(habit: HabitData) -> some View {
         GeometryReader { geometry in
             let cardWidth = geometry.size.width * 0.9
-                    let cardHeight = geometry.size.height * 0.85 // 추가
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 15)
-                            .fill(Color.white)
-                            .frame(width: cardWidth, height: cardHeight)
+            let cardHeight = geometry.size.height * 0.85
+
+            ZStack {
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color.white)
+                    .shadow(radius: 5)
 
                 VStack(spacing: 20) {
+
                     Text("\(habit.startDate.toString()) ~ \(habit.endDate.toString())")
                         .font(.system(size: cardWidth * 0.04))
                         .foregroundColor(.gray)
-                        .frame(width: cardWidth, height: 10, alignment: .topLeading)
-                    
-                    HStack {
-                        VStack {
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 20)
+
+                    HStack{
+                        VStack(spacing: 8) {
                             Text(habit.title)
                                 .font(.system(size: cardWidth * 0.06, weight: .bold))
                                 .padding(.top, 10)
-
-                            let consecutiveDays = habit.consecutiveAchievedDays()
                             
-                            VStack(spacing: 8) {
-                                let totalDays = max(1, daysDifference(date1: habit.startDate, date2: habit.endDate.addingTimeInterval(24 * 60 * 60)))
-                                let elapsedDays = max(0, daysDifference(date1: habit.startDate, date2: min(Date(), habit.endDate).addingTimeInterval(24 * 60 * 60)))
-                                let percentage = String(format: "%.1f", Double(elapsedDays) / Double(totalDays) * 100)
-                                
-                                Text("진행률: \(percentage)%")
-                                    .font(.system(size: cardWidth * 0.05))
-                                    .foregroundColor(.blue)
-
-                                ProgressView(value: Double(elapsedDays), total: Double(totalDays))
-                                    .progressViewStyle(LinearProgressViewStyle(tint: .blue))
-                                    .frame(width: cardWidth * 0.6)
-                            }
+                            let totalDays = max(1, daysDifference(date1: habit.startDate, date2: habit.endDate.addingTimeInterval(24 * 60 * 60)))
+                            let elapsedDays = max(0, daysDifference(date1: habit.startDate, date2: min(Date(), habit.endDate).addingTimeInterval(24 * 60 * 60)))
+                            let progressPercentage = String(format: "%.1f", Double(elapsedDays) / Double(totalDays) * 100)
                             
-                            if consecutiveDays == 0 {
-                                Text("오늘의 목표를 달성해 보세요!")
-                                    .font(.system(size: cardWidth * 0.05, weight: .bold))
-                                    .foregroundColor(.orange)
-                            } else {
-                                Text("🔥 \(consecutiveDays)일 연속 달성 중!")
-                                    .font(.system(size: cardWidth * 0.05, weight: .bold))
-                                    .foregroundColor(.orange)
-                            }
+                            Text("진행률: \(progressPercentage)%")
+                                .font(.system(size: cardWidth * 0.05))
+                                .foregroundColor(.blue)
+                            
+                            ProgressView(value: Double(elapsedDays), total: Double(totalDays))
+                                .progressViewStyle(LinearProgressViewStyle(tint: .blue))
+                                .frame(width: cardWidth * 0.6)
                         }
-                        
                         if let firstDaily = habit.sortedDaily.first {
-                            Image(firstDaily.image)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: cardWidth * 0.3, height: cardWidth * 0.3)
-                                .clipShape(Circle())
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color.blue, lineWidth: 2)
-                                )
-                        }
-                    }
-                    ZStack {
-                        let dynamicHeight = selectedDate == nil ? geometry.size.height * 0.3 : geometry.size.height * 0.5
-
-                        RoundedRectangle(cornerRadius: 15)
-                            .fill(Color("MediumBlue"))
-                            .frame(width: geometry.size.width * 0.85, height: dynamicHeight)
-                            .animation(.easeInOut(duration: 0.3), value: selectedDate)
-
- 
-                        VStack(spacing: 20) {
-
-                            Text("최근 2주간의 기록")
-                                .frame(width: cardWidth * 0.9, alignment: .topLeading)
-                                .foregroundColor(.white)
-                                .padding(.top, selectedDate == nil ? 10 : 20)
-                                .animation(.easeInOut(duration: 0.3), value: selectedDate)
-
-                            // 조절 패널
-                            if let selectedDate = selectedDate,
-                               let daily = habit.sortedDaily.first(where: { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }) {
-                                VStack(spacing: 10) {
-                                    HStack(spacing: 20) {
-                                        Button(action: {
-                                            if daily.count > 0 {
-                                                daily.count -= 1
-                                                HabitManager.saveContext(modelContext)
-                                            }
-                                        }) {
-                                            Text("-")
-                                                .font(.title)
-                                                .frame(width: 40, height: 40)
-                                                .background(Color.clear)
-                                                .foregroundColor(.white)
-                                                .clipShape(Circle())
-                                        }
-
-                                        Text("\(daily.count)")
-                                            .font(.title)
-                                            .foregroundColor(.white)
-
-                                        Button(action: {
-                                            daily.count += 1
-                                            HabitManager.saveContext(modelContext)
-                                        }) {
-                                            Text("+")
-                                                .font(.title)
-                                                .frame(width: 40, height: 40)
-                                                .background(Color.clear)
-                                                .foregroundColor(.white)
-                                                .clipShape(Circle())
-                                        }
-                                    }
-                                    .padding(.bottom, 10)
-                                }
-                                .padding(10)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color.black.opacity(0.1))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 15)
-                                                .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
-                                                .foregroundColor(.white)
-                                        )
-                                )
-                                .shadow(radius: 5)
-                                .padding(.horizontal, 10)
-                                .transition(.move(edge: .top))
-                                .animation(.easeInOut(duration: 0.3), value: selectedDate)
-                            }
-
-                            // LazyVGrid (2주 데이터)
-                            LazyVGrid(
-                                columns: Array(repeating: GridItem(.flexible(), spacing: 5), count: 7),
-                                spacing: 10
-                            ) {
-                                ForEach(recentTwoWeeksDates(), id: \.self) { date in
-                                    let daily = habit.sortedDaily.first { Calendar.current.isDate($0.date, inSameDayAs: date) }
-                                    let isCompleted = daily?.count ?? 0 >= habit.goal
-
-                                    Button(action: {
-                                        if date >= habit.startDate {
-                                            selectedDate = (selectedDate == date) ? nil : date
-                                        }
-                                    }) {
-                                        Circle()
-                                            .fill(date < habit.startDate ? Color.gray.opacity(0.4) : (isCompleted ? Color.teal : Color("StrongBlue-comp")))
-                                            .frame(width: cardWidth * 0.1, height: cardWidth * 0.1)
-                                            .overlay(
-                                                Text(formattedDate(date: date))
-                                                    .font(.system(size: cardWidth * 0.035))
-                                                    .foregroundColor(.white)
-                                            )
-                                            .opacity(date < habit.startDate ? 0.5 : 1.0)
-                                    }
-                                    .disabled(date < habit.startDate)
-                                }
-                            }
-                            .padding(.horizontal, 10)
-                            .padding(.top, selectedDate == nil ? 0 : -20)
-                            .transition(.move(edge: .bottom))
-                            .animation(.easeInOut(duration: 0.3), value: selectedDate)
-                        }
-                        .padding(10)
-                        .frame(width: geometry.size.width * 0.85, height: dynamicHeight)
+                                               Image(firstDaily.image)
+                                                   .resizable()
+                                                   .scaledToFit()
+                                                   .frame(width: cardWidth * 0.3, height: cardWidth * 0.3)
+                                                   .clipShape(Circle())
+                                                   .overlay(
+                                                       Circle()
+                                                           .stroke(Color.blue, lineWidth: 2)
+                                                   )
+                                           }
                     }
 
-
-
-
-                       
-                    // 팝업
-                    /*
-                        if let selectedDate = selectedDate,
-                           let daily = habit.sortedDaily.first(where: { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }) {
-                            CountAdjustPopoverView(
-                                habit: habit,
-                                daily: daily,
-                                onClose: {
-                                    withAnimation { self.selectedDate = nil }
-                                }
-                            )
-                            .frame(width: cardWidth * 0.85)
-                            .offset(y: -geometry.size.height*0.08) // 팝업 위치를 버튼 배열 바로 위로 설정
-                            .transition(.scale)
-                            .zIndex(1)
-                        }
-                     */
+                    // 연속 달성 표시
+                    let consecutiveDays = habit.consecutiveAchievedDays()
+                    if consecutiveDays > 0 {
+                        Text("🔥 \(consecutiveDays)일 연속 달성 중!")
+                            .font(.system(size: cardWidth * 0.05, weight: .bold))
+                            .foregroundColor(.orange)
+                    } else {
+                        Text("오늘의 목표를 달성해 보세요!")
+                            .font(.system(size: cardWidth * 0.05, weight: .bold))
+                            .foregroundColor(.orange)
                     }
+
+                    // 최근 2주간의 기록
+                    recentRecordSection(habit: habit, cardWidth: cardWidth, geometry: geometry)
                 }
-                .padding(20)
+                .padding()
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            // 좌우 반전 효과 추가
             .rotation3DEffect(
-                .degrees(habit.isFlipped ? 180 : 0),
+                .degrees(180),
                 axis: (x: 0, y: 1, z: 0)
             )
+        }
     }
-    
+
+
+    private func recentRecordSection(habit: HabitData, cardWidth: CGFloat, geometry: GeometryProxy) -> some View {
+        ZStack {
+            let dynamicHeight = selectedDate == nil ? geometry.size.height * 0.3 : geometry.size.height * 0.5
+
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color("MediumBlue"))
+                .frame(width: geometry.size.width * 0.85, height: dynamicHeight)
+                .animation(.easeInOut(duration: 0.3), value: selectedDate)
+
+            VStack(spacing: 20) {
+                // 헤더
+                Text("최근 2주간의 기록")
+                    .frame(width: cardWidth * 0.9, alignment: .topLeading)
+                    .foregroundColor(.white)
+                    .padding(.top, selectedDate == nil ? 10 : 20)
+                    .animation(.easeInOut(duration: 0.3), value: selectedDate)
+
+                if let selectedDate = selectedDate,
+                   let daily = habit.sortedDaily.first(where: { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }) {
+                    dailyAdjustPanel(daily: daily, habit: habit)
+                        .transition(.move(edge: .top))
+                        .animation(.easeInOut(duration: 0.3), value: selectedDate)
+                }
+
+                // LazyVGrid로 날짜 기록
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(.flexible(), spacing: 5), count: 7),
+                    spacing: 10
+                ) {
+                    ForEach(recentTwoWeeksDates(), id: \.self) { date in
+                        let daily = habit.sortedDaily.first { Calendar.current.isDate($0.date, inSameDayAs: date) }
+                        let isCompleted = daily?.count ?? 0 >= habit.goal
+
+                        Button(action: {
+                            if date >= habit.startDate {
+                                selectedDate = (selectedDate == date) ? nil : date
+                            }
+                        }) {
+                            Circle()
+                                .fill(date < habit.startDate ? Color.gray.opacity(0.4) : (isCompleted ? Color.teal : Color("StrongBlue-comp")))
+                                .frame(width: cardWidth * 0.1, height: cardWidth * 0.1)
+                                .overlay(
+                                    Text(formattedDate(date: date))
+                                        .font(.system(size: cardWidth * 0.035))
+                                        .foregroundColor(.white)
+                                )
+                                .opacity(date < habit.startDate ? 0.5 : 1.0)
+                        }
+                        .disabled(date < habit.startDate)
+                    }
+                }
+                .padding(.horizontal, 10)
+                .padding(.top, selectedDate == nil ? 0 : -20)
+                .transition(.move(edge: .bottom))
+                .animation(.easeInOut(duration: 0.3), value: selectedDate)
+            }
+            .padding(10)
+            .frame(width: geometry.size.width * 0.85, height: dynamicHeight)
+        }
+    }
+
+    private func dailyAdjustPanel(daily: Daily, habit: HabitData) -> some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 20) {
+                Button(action: {
+                    if daily.count > 0 {
+                        daily.count -= 1
+                        HabitManager.saveContext(modelContext)
+                    }
+                }) {
+                    Text("-")
+                        .font(.title)
+                        .frame(width: 40, height: 40)
+                        .background(Color.clear)
+                        .foregroundColor(.white)
+                        .clipShape(Circle())
+                }
+
+                Text("\(daily.count)")
+                    .font(.title)
+                    .foregroundColor(.white)
+
+                Button(action: {
+                    daily.count += 1
+                    HabitManager.saveContext(modelContext)
+                }) {
+                    Text("+")
+                        .font(.title)
+                        .frame(width: 40, height: 40)
+                        .background(Color.clear)
+                        .foregroundColor(.white)
+                        .clipShape(Circle())
+                }
+            }
+            .padding(.bottom, 10)
+        }
+        .padding(10)
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color.black.opacity(0.1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
+                        .foregroundColor(.white)
+                )
+        )
+        .shadow(radius: 5)
+        .padding(.horizontal, 10)
+    }
+
+
 
 
 
