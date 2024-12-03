@@ -8,8 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7A232A142CEC3B8100706963 /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A232A132CEC3B7D00706963 /* FeedView.swift */; };
-		7A232A162CEC42F800706963 /* CustomCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A232A152CEC42F500706963 /* CustomCalendar.swift */; };
-		7A232A182CED7F5400706963 /* WeeklyCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A232A172CED7F4F00706963 /* WeeklyCalendar.swift */; };
+		7A232A182CED7F5400706963 /* ExpandableCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A232A172CED7F4F00706963 /* ExpandableCalendar.swift */; };
 		9ACA482C2CD9BF1F000D4D4B /* WashabitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA482B2CD9BF1F000D4D4B /* WashabitApp.swift */; };
 		9ACA482E2CD9BF1F000D4D4B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA482D2CD9BF1F000D4D4B /* ContentView.swift */; };
 		9ACA48302CD9BF21000D4D4B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9ACA482F2CD9BF21000D4D4B /* Assets.xcassets */; };
@@ -38,8 +37,7 @@
 
 /* Begin PBXFileReference section */
 		7A232A132CEC3B7D00706963 /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
-		7A232A152CEC42F500706963 /* CustomCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendar.swift; sourceTree = "<group>"; };
-		7A232A172CED7F4F00706963 /* WeeklyCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyCalendar.swift; sourceTree = "<group>"; };
+		7A232A172CED7F4F00706963 /* ExpandableCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableCalendar.swift; sourceTree = "<group>"; };
 		9ACA48282CD9BF1F000D4D4B /* Washabit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Washabit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ACA482B2CD9BF1F000D4D4B /* WashabitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WashabitApp.swift; sourceTree = "<group>"; };
 		9ACA482D2CD9BF1F000D4D4B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -100,8 +98,7 @@
 		9ACA482A2CD9BF1F000D4D4B /* Washabit */ = {
 			isa = PBXGroup;
 			children = (
-				7A232A172CED7F4F00706963 /* WeeklyCalendar.swift */,
-				7A232A152CEC42F500706963 /* CustomCalendar.swift */,
+				7A232A172CED7F4F00706963 /* ExpandableCalendar.swift */,
 				7A232A132CEC3B7D00706963 /* FeedView.swift */,
 				9ACA482B2CD9BF1F000D4D4B /* WashabitApp.swift */,
 				9ACA482D2CD9BF1F000D4D4B /* ContentView.swift */,
@@ -266,8 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A232A162CEC42F800706963 /* CustomCalendar.swift in Sources */,
-				7A232A182CED7F5400706963 /* WeeklyCalendar.swift in Sources */,
+				7A232A182CED7F5400706963 /* ExpandableCalendar.swift in Sources */,
 				9ACA482E2CD9BF1F000D4D4B /* ContentView.swift in Sources */,
 				7A232A142CEC3B8100706963 /* FeedView.swift in Sources */,
 				9ACA482C2CD9BF1F000D4D4B /* WashabitApp.swift in Sources */,

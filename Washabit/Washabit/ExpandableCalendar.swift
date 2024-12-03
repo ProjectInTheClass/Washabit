@@ -75,29 +75,33 @@ struct WeeklyView: View {
     private let daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"]
 
     var body: some View {
-        VStack {
-            // 요일 헤더
-            HStack(spacing: 8) {
-                ForEach(daysOfWeek, id: \.self) { day in
-                    Text(day)
-                        .font(.subheadline)
-                        .frame(maxWidth: .infinity)
-                        .foregroundColor(.gray)
-                }
-            }
-
-            // 주간 날짜
-            HStack(spacing: 8) {
-                ForEach(currentWeekDates, id: \.self) { date in
-                    VStack {
-                        Text("\(Calendar.current.component(.day, from: date))")
-                            .font(.title3)
-                            .foregroundColor(isToday(date) ? .blue : .primary)
+        TabView {
+            VStack{
+                // 요일 헤더
+                HStack(spacing: 8) {
+                    ForEach(daysOfWeek, id: \.self) { day in
+                        Text(day)
+                            .font(.subheadline)
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.gray)
                     }
-                    .frame(maxWidth: .infinity)
+                }
+                
+                // 주간 날짜
+                HStack(spacing: 8) {
+                    ForEach(currentWeekDates, id: \.self) { date in
+                        VStack {
+                            Text("\(Calendar.current.component(.day, from: date))")
+                                .font(.title3)
+                                .foregroundColor(isToday(date) ? .blue : .primary)
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
                 }
             }
+            
         }
+        .tabViewStyle(.page)
     }
 
     private var currentWeekDates: [Date] {
