@@ -8,10 +8,25 @@
 import SwiftUI
 
 struct AddHabitView: View {
+    @Environment(\.modelContext) private var modelContext
     @State var title:String = ""
     @State private var selectedOption: String? = "고치고 싶은"
     @State private var date = Date()
     @State private var totalHabitCount:Int = 30
+    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
+       var backButton : some View {  // <-- 👀 커스텀 버튼
+           Button{
+               self.presentationMode.wrappedValue.dismiss()
+           } label: {
+               HStack {
+                   Image(systemName: "chevron.left")
+                       .font(.system(size: 18, weight: .bold))
+                       .foregroundColor(Color("StrongBlue-font"))
+               }
+           }
+       }
         
     let options = ["고치고 싶은", "만들고 싶은"]
     @State private var selectedCount: Int = 1
@@ -25,9 +40,15 @@ struct AddHabitView: View {
             Color("MainColor")
             VStack{
                 HStack{
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(Color("StrongBlue-font"))
+                    Button{
+                        self.presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        HStack {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundColor(Color("StrongBlue-font"))
+                        }
+                    }
                     Spacer()
                 }
                 .padding([.top,.leading],20)
@@ -163,22 +184,37 @@ struct AddHabitView: View {
                 .cornerRadius(15)
                 HStack{
                     Spacer()
+                    Button{
+                        HabitManager.addNewHabit(
+                            title,
+                            selectedCount,
+                            Date(),
+                            Date().addingTimeInterval(3 * 24 * 60 * 60),
+                            to: modelContext
+                        )
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                label: {
                     Circle()
                         .fill(Color(.white))
                         .frame(width:66, height:66)
                         .shadow(color: Color.black.opacity(0.25), radius: 8, x: 0, y: 2)
                         .overlay(
-                            Image(systemName:"checkmark")
-                            .font(.system(size: 20))
-                            .foregroundColor(Color("StrongBlue-font"))
+                            
+                            HStack {
+                                Image(systemName:"checkmark")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(Color("StrongBlue-font"))
+                            }
                         )
-                }
+                }}
                 .padding(.trailing,20)
                 .padding(.top,10)
             }
             .padding()
         }
         .ignoresSafeArea()
+        .navigationBarBackButtonHidden(true)
     }
 }
 

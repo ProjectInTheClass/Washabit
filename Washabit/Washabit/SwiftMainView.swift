@@ -85,7 +85,7 @@ struct SwiftMainView: View {
                 // 추가 버튼 (아래쪽)
                 HStack {
                     Spacer()
-                    Button(action: {
+                    /*Button(action: {
                         let startDate = Date().addingTimeInterval(-7 * 24 * 60 * 60)
                         let endDate = Date().addingTimeInterval(3 * 24 * 60 * 60)
                         HabitManager.addNewHabit(
@@ -102,11 +102,26 @@ struct SwiftMainView: View {
                             .background(Color.blue.opacity(0.8))
                             .foregroundColor(.white)
                             .cornerRadius(10)
+                    }*/
+                    NavigationLink(destination: AddHabitView() ) {
+                        Circle()
+                            .fill(Color(.white))
+                            .frame(width:66, height:66)
+                            .shadow(color: Color.black.opacity(0.25), radius: 8, x: 0, y: 2)
+                            .overlay(
+                                
+                                HStack {
+                                    Image(systemName:"plus")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(Color("StrongBlue-font"))
+                                }
+                            )
                     }
-                    .padding(.bottom, 20)
-                    .padding(.trailing, 20)
                 }
+                .padding(.bottom, 20)
+                .padding(.trailing, 20)
             }.background(Color("MainColor"))
+            
         }
     }
     
@@ -210,15 +225,15 @@ struct SwiftMainView: View {
                         if let todayDaily = habit.sortedDaily.first(where: {
                             Calendar.current.isDate($0.date, inSameDayAs: Date())
                         }) {
-                                               Image(todayDaily.image)
-                                                   .resizable()
-                                                   .scaledToFit()
-                                                   .frame(width: cardWidth * 0.3, height: cardWidth * 0.3)
-                                                   .clipShape(Circle())
-                                                   .overlay(
-                                                       Circle()
-                                                           .stroke(Color.blue, lineWidth: 2)
-                                                   )
+                            NavigationLink(destination: AddHabitView() ) { Image(todayDaily.image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: cardWidth * 0.3, height: cardWidth * 0.3)
+                                    .clipShape(Circle())
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.blue, lineWidth: 2)
+                                    )}
                                            }
                     }
 
