@@ -36,7 +36,7 @@ struct FeedView: View {
                 
                 ExpandableCalendar()
                     .frame(width:375)
-                    .padding(.top,15)
+                    .padding(.top,10)
                 
                 ScrollFeedView()
                 
@@ -94,7 +94,6 @@ struct FeedContentView: View{
         }
         .frame(width:345)
         .cornerRadius(15)
-        .padding([.top,.bottom],15)
     }
 }
 
