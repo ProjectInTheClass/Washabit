@@ -6,15 +6,22 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddHabitView: View {
     @Environment(\.modelContext) private var modelContext
+    @Query private var habits: [HabitData]
     @State var title:String = ""
     @State private var selectedOption: String? = "고치고 싶은"
     @State private var date = Date()
-    @State private var totalHabitCount:Int = 30
+    @State private var startDate: Date? = nil
+    @State private var endDate: Date? = nil
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    @State private var showAlert: Bool = false
+    @State private var alertMessage: String = ""
+    @State private var showConfirmation: Bool = false
 
        var backButton : some View {  // <-- 👀 커스텀 버튼
            Button{
@@ -67,7 +74,7 @@ struct AddHabitView: View {
                         .cornerRadius(12)
                     HStack{
                         Spacer()
-                        Text("\(totalHabitCount)번째 목표")
+                        Text("\(habits.count + 1)번째 목표")
                             .font(.system(size: 13, weight: .bold))
                             .foregroundColor(.white)
                             .frame(width:85, height:28)
@@ -121,7 +128,7 @@ struct AddHabitView: View {
                             .padding(.bottom, 10)
                             .bold()
                             .font(.system(size: 15))
-                        CustomDatePickerView()
+                        CustomDatePickerView(startDate: $startDate, endDate: $endDate)
                     
                         HStack{
                             Text(selectedOption == "고치고 싶은" ? "하루 제한 횟수" : "하루 실행 횟수")
@@ -185,14 +192,12 @@ struct AddHabitView: View {
                 HStack{
                     Spacer()
                     Button{
-                        HabitManager.addNewHabit(
-                            title,
-                            selectedCount,
-                            Date(),
-                            Date().addingTimeInterval(3 * 24 * 60 * 60),
-                            to: modelContext
-                        )
-                        self.presentationMode.wrappedValue.dismiss()
+                        if title.isEmpty || startDate == nil || endDate == nil {
+                            alertMessage = "습관 정보를 입력해주세요."
+                            showAlert = true
+                        } else {
+                            showConfirmation = true
+                        }
                     }
                 label: {
                     Circle()
@@ -215,6 +220,28 @@ struct AddHabitView: View {
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden(true)
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("알림"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
+        }
+        .confirmationDialog(
+            "습관을 등록하시겠습니까?",
+            isPresented: $showConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("등록", role: .none) {
+                HabitManager.addNewHabit(
+                    title,
+                    selectedOption ?? "고치고 싶은",
+                    selectedCount,
+                    selectedPercentage,
+                    startDate ?? Date(),
+                    endDate ?? Date(),
+                    to: modelContext
+                )
+                self.presentationMode.wrappedValue.dismiss()
+            }
+            Button("취소", role: .cancel) {}
+        }
     }
 }
 

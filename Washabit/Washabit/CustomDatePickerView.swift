@@ -1,9 +1,13 @@
 import SwiftUI
 
 struct CustomDatePickerView: View {
-    @State private var startDate: Date? = nil
-    @State private var endDate: Date? = nil
+    @Binding var startDate: Date?
+    @Binding var endDate: Date?
     @State private var selectedMonth: Date = Date()
+    
+    private var today: Date{
+        Calendar.current.startOfDay(for: Date())
+    }
     
     private var monthFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -49,15 +53,19 @@ struct CustomDatePickerView: View {
             
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7)) {
                 ForEach(daysInMonth, id: \.self) { date in
+                    let isBeforeToday = date < today
                     Text("\(Calendar.current.component(.day, from: date))")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(5)
                         .background(
-                            backgroundColor(for: date)
+                            Circle()
+                                .fill(backgroundColor(for: date))
                         )
-                        .cornerRadius(10)
+                        .foregroundColor(isBeforeToday ? Color.gray.opacity(0.5) : Color.primary)
                         .onTapGesture {
-                            selectDate(date)
+                            if !isBeforeToday {
+                                selectDate(date)
+                            }
                         }
                 }
             }
@@ -70,11 +78,14 @@ struct CustomDatePickerView: View {
         
         if let endDate = endDate {
             // 범위 내에 있는 날짜는 파란색 배경
-            if date >= startDate && date <= endDate {
-                return Color.blue.opacity(0.2)
+            if date > startDate && date < endDate {
+                return Color("LightBlue").opacity(0.44)
+            }
+            else if date == startDate || date == endDate {
+                return Color("LightBlue").opacity(0.8)
             }
         } else if date == startDate {
-            return Color.blue.opacity(0.5) // 시작 날짜는 진한 파란색
+            return Color("LightBlue").opacity(0.8) // 시작 날짜는 진한 파란색
         }
         
         return Color.clear
@@ -101,10 +112,3 @@ extension Calendar {
         return self.date(from: self.dateComponents([.year, .month], from: date))
     }
 }
-
-struct CustomDatePickerView_Previews: PreviewProvider {
-    static var previews: some View {
-        CustomDatePickerView()
-    }
-}
-

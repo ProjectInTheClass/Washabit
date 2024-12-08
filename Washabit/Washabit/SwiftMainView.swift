@@ -160,9 +160,9 @@ struct SwiftMainView: View {
                         Calendar.current.isDate($0.date, inSameDayAs: Date())
                     }) {
                         WaterFillView(progress: Binding(
-                            get: { CGFloat(todayDaily.count) / CGFloat(habit.goal) },
+                            get: { CGFloat(todayDaily.count) / CGFloat(habit.goalCount) },
                             set: { newValue in
-                                todayDaily.count = Int(newValue * CGFloat(habit.goal))
+                                todayDaily.count = Int(newValue * CGFloat(habit.goalCount))
                             }
                         ))
                         .frame(width: cardWidth * 0.6)
@@ -174,7 +174,7 @@ struct SwiftMainView: View {
                         }
                         
                         
-                        Text("\(todayDaily.count) / \(habit.goal)")
+                        Text("\(todayDaily.count) / \(habit.goalCount)")
                             .font(.system(size: cardWidth * 0.05))
                             .foregroundColor(.blue)
                             .padding(.top)
@@ -294,7 +294,7 @@ struct SwiftMainView: View {
                 ) {
                     ForEach(recentTwoWeeksDates(), id: \.self) { date in
                         let daily = habit.sortedDaily.first { Calendar.current.isDate($0.date, inSameDayAs: date) }
-                        let isCompleted = daily?.count ?? 0 >= habit.goal
+                        let isCompleted = daily?.count ?? 0 >= habit.goalCount
 
                         Button(action: {
                             if date >= habit.startDate {

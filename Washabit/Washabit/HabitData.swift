@@ -14,16 +14,20 @@ import Foundation
 class HabitData: Identifiable {
     @Attribute(.unique) var id: UUID
     var title: String
-    var goal: Int
+    var type: String
+    var goalCount: Int
+    var goalPercentage: Int
     var startDate: Date
     var endDate: Date
     var isFlipped: Bool
     @Relationship(deleteRule: .cascade) var daily: [Daily]
 
-    init(title: String, goal: Int, startDate: Date, endDate: Date, isFlipped: Bool = false, daily: [Daily]) {
+    init(title: String, type: String, goalCount: Int, goalPercentage: Int, startDate: Date, endDate: Date, isFlipped: Bool = false, daily: [Daily]) {
         self.id = UUID()
         self.title = title
-        self.goal = goal
+        self.type = type
+        self.goalCount = goalCount
+        self.goalPercentage = goalPercentage
         self.startDate = startDate
         self.endDate = endDate
         self.isFlipped = isFlipped
@@ -62,7 +66,7 @@ extension HabitData {
         for daily in sortedDaily.reversed() {
             if Calendar.current.isDateInToday(daily.date) || Calendar.current.isDate(daily.date, inSameDayAs: today.addingTimeInterval(-Double(consecutiveDays) * 24 * 60 * 60)) {
                 // 목표 달성 여부 확인
-                if daily.count >= goal {
+                if (type == "고치고 싶은" && daily.count <= goalCount) || (type == "만들고 싶은" && daily.count >= goalCount) {
                     consecutiveDays += 1
                 } else {
                     break // 연속 달성이 끊기면 종료

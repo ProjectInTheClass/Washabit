@@ -10,12 +10,14 @@ import SwiftUI
 class HabitManager {
     static func addNewHabit(
         _ title: String,
-        _ goal: Int,
+        _ type : String,
+        _ goalCount: Int,
+        _ goalPercentage: Int,
         _ startDate: Date,
         _ endDate: Date,
         to modelContext: ModelContext
     ) {
-        let newHabit = HabitData(title: title, goal: goal, startDate: startDate, endDate: endDate, daily: [])
+        let newHabit = HabitData(title: title, type: type, goalCount: goalCount, goalPercentage: goalPercentage, startDate: startDate, endDate: endDate, daily: [])
         modelContext.insert(newHabit)
 
         let daysDiff = daysDifference(date1: startDate, date2: endDate)
