@@ -94,7 +94,7 @@ struct FeedContentView: View{
         }
         .frame(width:345)
         .cornerRadius(15)
-        .padding([.top,.bottom],15)
+        .padding(.bottom,15)
     }
 }
 
