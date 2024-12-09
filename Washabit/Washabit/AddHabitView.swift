@@ -207,9 +207,7 @@ struct AddHabitView: View {
                         .overlay(
                             
                             HStack {
-                                Image(systemName:"checkmark")
-                                    .font(.system(size: 20))
-                                    .foregroundColor(Color("StrongBlue-font"))
+                                Image("Icons/checkmark")
                             }
                         )
                 }}

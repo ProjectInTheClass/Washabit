@@ -11,7 +11,7 @@ struct FeedView: View {
                 HStack{
                     ZStack{
                         Color(.white)
-                        Image("Icons/home_icon")
+                        Image("Icons/home")
                     }
                     .frame(width:38, height:38)
                     .cornerRadius(12)
@@ -22,13 +22,13 @@ struct FeedView: View {
                 HStack{
                     Text("<\(title)> 피드")
                         .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(Color("StrongGray"))
+                        .foregroundColor(Color("StrongGray-font"))
                         .padding(.leading,20)
                     Spacer()
                     Text("모아보기>")
                         .font(.system(size:14))
                         .underline()
-                        .foregroundColor(Color("StrongGray"))
+                        .foregroundColor(Color("StrongGray-font"))
                         .padding(.trailing,20)
                 }
                 .padding(.top, 15)
@@ -85,7 +85,7 @@ struct FeedContentView: View{
         ZStack{
             Color(.white)
             VStack{
-                Image("Images/test_image")
+                Image("sample_image")
                 Spacer()
                 Text(daily1.descr)
                     .font(.system(size: 15))
