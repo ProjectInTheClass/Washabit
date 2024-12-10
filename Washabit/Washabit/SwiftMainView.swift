@@ -3,129 +3,134 @@ import SwiftData
 
 struct SwiftMainView: View {
     @Environment(\.modelContext) private var modelContext
-//    @Query private var habits: [HabitData]
-    var habits :[HabitData] = []
-
+   @Query private var habits: [HabitData]
+   // var habits :[HabitData] = []
     var body: some View {
-        ZStack {
-            VStack {
-                // 삭제 버튼 (위쪽)
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        if !habits.isEmpty {
-                            HabitManager.deleteHabit(habits[0], to: modelContext)
-                        } else {
-                            print("삭제할 목표가 없습니다.")
+        NavigationView(content: {
+            ZStack {
+                VStack {
+                    // 삭제 버튼 (위쪽)
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            if !habits.isEmpty {
+                                HabitManager.deleteHabit(habits[0], to: modelContext)
+                            } else {
+                                print("삭제할 목표가 없습니다.")
+                            }
+                        }) {
+                            Label("목표 삭제", systemImage: "trash")
+                                .font(.headline)
+                                .padding(10)
+                                .background(Color.red.opacity(0.8))
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
                         }
-                    }) {
-                        Label("목표 삭제", systemImage: "trash")
-                            .font(.headline)
-                            .padding(10)
-                            .background(Color.red.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                        .padding(.top, 20)
+                        .padding(.trailing, 20)
                     }
-                    .padding(.top, 20)
-                    .padding(.trailing, 20)
-                }
-
-                Spacer()
-                HStack{
-                    Text("진행중인 목표")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(Color("StrongBlue-font"))
+                    
                     Spacer()
-                }
-                .padding(.leading,30)
-                // 탭 뷰 (중앙)
-                if habits.isEmpty {
-                    Text("새로운 습관 목표를 추가해주세요!")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(Color("StrongBlue-font"))
-                } else {
-                    TabView {
-                        ForEach(habits) { habit in
-                            if habit.endDate >= Date() {
-                                ZStack {
-                                    if !habit.isFlipped {
-                                        frontHabitView(habit: habit)
-                                    } else {
-                                        backHabitView(habit: habit)
+                    HStack{
+                        if !habits.isEmpty
+                        {
+                            Text("진행중인 목표")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(Color("StrongBlue-font"))
+                            Spacer()
+                        }
+                    }
+                    .padding(.leading,30)
+                    // 탭 뷰 (중앙)
+                    if habits.isEmpty {
+                        Text("새로운 습관 목표를 추가해주세요!")
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(Color("StrongBlue-font"))
+                    } else {
+                        TabView {
+                            ForEach(habits) { habit in
+                                if habit.endDate >= Date() && habit.startDate <= Date() {
+                                    ZStack {
+                                        if !habit.isFlipped {
+                                            frontHabitView(habit: habit)
+                                        } else {
+                                            backHabitView(habit: habit)
+                                        }
                                     }
-                                }
-                                .rotation3DEffect(
-                                    .degrees(habit.isFlipped ? 180 : 0),
-                                    axis: (x: 0, y: 1, z: 0),
-                                    perspective: 0.5
-                                )
-                                .onTapGesture {
-                                    if selectedDate != nil {
-                                        selectedDate = nil
-                                    } else {
-                                        withAnimation {
-                                            habit.isFlipped.toggle()
+                                    .rotation3DEffect(
+                                        .degrees(habit.isFlipped ? 180 : 0),
+                                        axis: (x: 0, y: 1, z: 0),
+                                        perspective: 0.5
+                                    )
+                                    .onTapGesture {
+                                        if selectedDate != nil {
+                                            selectedDate = nil
+                                        } else {
+                                            withAnimation {
+                                                habit.isFlipped.toggle()
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+                        .onAppear {
+                            // 현재 선택된 페이지의 색상을 파란색으로 설정
+                            UIPageControl.appearance().currentPageIndicatorTintColor = UIColor(Color("StrongBlue-font"))
+                            // 나머지 페이지 점들의 색상을 회색으로 설정
+                            UIPageControl.appearance().pageIndicatorTintColor = UIColor(Color.gray.opacity(0.5))
+                        }
+                        .frame(width: 350, height: 400)
+                        .cornerRadius(15)
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+                        
                     }
-                    .onAppear {
-                        // 현재 선택된 페이지의 색상을 파란색으로 설정
-                        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor(Color("StrongBlue-font"))
-                        // 나머지 페이지 점들의 색상을 회색으로 설정
-                        UIPageControl.appearance().pageIndicatorTintColor = UIColor(Color.gray.opacity(0.5))
-                    }
-                    .frame(width: 350, height: 400)
-                    .cornerRadius(15)
-                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-
-                }
-
-                Spacer()
-
-                // 추가 버튼 (아래쪽)
-                HStack {
+                    
                     Spacer()
-                    /*Button(action: {
-                        let startDate = Date().addingTimeInterval(-7 * 24 * 60 * 60)
-                        let endDate = Date().addingTimeInterval(3 * 24 * 60 * 60)
-                        HabitManager.addNewHabit(
-                            "New Habit",
-                            5,
-                            startDate,
-                            endDate,
-                            to: modelContext
-                        )
-                    }) {
-                        Label("새 목표 추가", systemImage: "plus")
-                            .font(.headline)
-                            .padding(10)
-                            .background(Color.blue.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }*/
-                    NavigationLink(destination: AddHabitView() ) {
-                        Circle()
-                            .fill(Color(.white))
-                            .frame(width:66, height:66)
-                            .shadow(color: Color.black.opacity(0.25), radius: 8, x: 0, y: 2)
-                            .overlay(
-                                
-                                HStack {
-                                    Image(systemName:"plus")
-                                        .font(.system(size: 20))
-                                        .foregroundColor(Color("StrongBlue-font"))
-                                }
-                            )
+                    
+                    // 추가 버튼 (아래쪽)
+                    HStack {
+                        Spacer()
+                        /*Button(action: {
+                         let startDate = Date().addingTimeInterval(-7 * 24 * 60 * 60)
+                         let endDate = Date().addingTimeInterval(3 * 24 * 60 * 60)
+                         HabitManager.addNewHabit(
+                         "New Habit",
+                         5,
+                         startDate,
+                         endDate,
+                         to: modelContext
+                         )
+                         }) {
+                         Label("새 목표 추가", systemImage: "plus")
+                         .font(.headline)
+                         .padding(10)
+                         .background(Color.blue.opacity(0.8))
+                         .foregroundColor(.white)
+                         .cornerRadius(10)
+                         }*/
+                        NavigationLink(destination: AddHabitView() ) {
+                            Circle()
+                                .fill(Color(.white))
+                                .frame(width:66, height:66)
+                                .shadow(color: Color.black.opacity(0.25), radius: 8, x: 0, y: 2)
+                                .overlay(
+                                    
+                                    HStack {
+                                        Image(systemName:"plus")
+                                            .font(.system(size: 20))
+                                            .foregroundColor(Color("StrongBlue-font"))
+                                    }
+                                )
+                        }
                     }
-                }
-                .padding(.bottom, 20)
-                .padding(.trailing, 20)
-            }.background(Color("MainColor"))
-            
-        }
+                    .padding(.bottom, 20)
+                    .padding(.trailing, 20)
+                }.background(Color("MainColor"))
+                    
+                
+            }
+        }).navigationBarBackButtonHidden(true)
     }
     
     
@@ -196,7 +201,10 @@ struct SwiftMainView: View {
                                 todayDaily.count = todayDaily.count+1
                             }
                             .onLongPressGesture{
-                                todayDaily.count = todayDaily.count-1
+                                if todayDaily.count > 0
+                                {
+                                    todayDaily.count = todayDaily.count-1
+                                }
                             }
                         }
                     }
@@ -257,7 +265,7 @@ struct SwiftMainView: View {
                         if let todayDaily = habit.sortedDaily.first(where: {
                             Calendar.current.isDate($0.date, inSameDayAs: Date())
                         }) {
-                        NavigationLink(destination: AddHabitView() ) { Image(todayDaily.image)
+                        NavigationLink(destination: FeedView() ) { Image(todayDaily.image)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: cardWidth * 0.3, height: cardWidth * 0.3)
@@ -548,6 +556,7 @@ struct SwiftMainView: View {
 // 프리뷰
 
 #Preview {
-    SwiftMainView(habits:HabitData.sampleData)
+    SwiftMainView().modelContainer(for: [HabitData.self, Daily.self])
 }
+
 
