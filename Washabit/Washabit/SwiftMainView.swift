@@ -8,6 +8,7 @@ struct SwiftMainView: View {
     @Query private var habits: [HabitData]
 
     var body: some View {
+        NavigationView(content: {
         ZStack {
             VStack {
                 // 삭제 버튼 (위쪽)
@@ -30,9 +31,9 @@ struct SwiftMainView: View {
                     .padding(.top, 20)
                     .padding(.trailing, 20)
                 }
-
+                
                 Spacer()
-
+                
                 // 탭 뷰 (중앙)
                 if habits.isEmpty {
                     Rectangle()
@@ -77,32 +78,32 @@ struct SwiftMainView: View {
                     }
                     .frame(width: 350, height: 420)
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-
+                    
                 }
-
+                
                 Spacer()
-
+                
                 // 추가 버튼 (아래쪽)
                 HStack {
                     Spacer()
                     /*Button(action: {
-                        let startDate = Date().addingTimeInterval(-7 * 24 * 60 * 60)
-                        let endDate = Date().addingTimeInterval(3 * 24 * 60 * 60)
-                        HabitManager.addNewHabit(
-                            "New Habit",
-                            5,
-                            startDate,
-                            endDate,
-                            to: modelContext
-                        )
-                    }) {
-                        Label("새 목표 추가", systemImage: "plus")
-                            .font(.headline)
-                            .padding(10)
-                            .background(Color.blue.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }*/
+                     let startDate = Date().addingTimeInterval(-7 * 24 * 60 * 60)
+                     let endDate = Date().addingTimeInterval(3 * 24 * 60 * 60)
+                     HabitManager.addNewHabit(
+                     "New Habit",
+                     5,
+                     startDate,
+                     endDate,
+                     to: modelContext
+                     )
+                     }) {
+                     Label("새 목표 추가", systemImage: "plus")
+                     .font(.headline)
+                     .padding(10)
+                     .background(Color.blue.opacity(0.8))
+                     .foregroundColor(.white)
+                     .cornerRadius(10)
+                     }*/
                     NavigationLink(destination: AddHabitView() ) {
                         Circle()
                             .fill(Color(.white))
@@ -121,8 +122,8 @@ struct SwiftMainView: View {
                 .padding(.bottom, 20)
                 .padding(.trailing, 20)
             }.background(Color("MainColor"))
-            
         }
+            })
     }
     
     

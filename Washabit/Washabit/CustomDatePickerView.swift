@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct CustomDatePickerView: View {
-    @State private var startDate: Date? = nil
-    @State private var endDate: Date? = nil
+    @State var startDate: Date? = nil
+    @State var endDate: Date? = nil
     @State private var selectedMonth: Date = Date()
     
     private var monthFormatter: DateFormatter {

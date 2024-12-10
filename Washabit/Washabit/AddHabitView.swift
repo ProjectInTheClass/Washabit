@@ -121,7 +121,7 @@ struct AddHabitView: View {
                             .padding(.bottom, 10)
                             .bold()
                             .font(.system(size: 15))
-                        CustomDatePickerView()
+                         CustomDatePickerView()
                     
                         HStack{
                             Text(selectedOption == "고치고 싶은" ? "하루 제한 횟수" : "하루 실행 횟수")
