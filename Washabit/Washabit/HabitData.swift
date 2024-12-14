@@ -44,11 +44,11 @@ class HabitData: Identifiable {
 @Model
 class Daily: Identifiable {
     var count: Int
-    var image: String
+    var image: Data?
     var diary: String
     var date: Date
 
-    init(value: Int, image: String, diary: String, date: Date) {
+    init(value: Int, image: Data?, diary: String, date: Date) {
         self.count = value
         self.image = image
         self.diary = diary
@@ -77,32 +77,47 @@ extension HabitData {
         return consecutiveDays
     }
     
-    static let sampleData: [HabitData] = [
-        HabitData(
-            title: "운동하기",
-            type:"만들고 싶은",
-            goalCount: 10,
-            goalPercentage: 75,
-            startDate: Date().addingTimeInterval(-7 * 24 * 60 * 60),
-            endDate: Date().addingTimeInterval(7 * 24 * 60 * 60),
-            daily: [
-                Daily(value: 5, image: "sample_image", diary: "오늘은 달성 못함", date: Date().addingTimeInterval(-1 * 24 * 60 * 60)),
-                Daily(value:12, image: "sample_image", diary: "오늘은 달성함~!", date: Date())
-            ]
-        ),
-        HabitData(
-            title: "손톱 물어뜯기 그만!",
-            type:"고치고 싶은",
-            goalCount:5,
-            goalPercentage: 50,
-            startDate: Date().addingTimeInterval(-14 * 24 * 60 * 60),
-            endDate: Date().addingTimeInterval(14 * 24 * 60 * 60),
-            daily: [
-                Daily(value:8, image:" ", diary:"시작하기!!", date: Date().addingTimeInterval(-1 * 24 * 60 * 60)),
-                Daily(value:9, image:" ", diary:"더 많이 하다니, 반성하자ㅠㅠ", date: Date())
-            ]
-        )
-    ]
+    
+    // 더미데이터
+//    static let sampleData: [HabitData] = [
+//        HabitData(
+//            title: "손톱 물어뜯기 그만!",
+//            type:"고치고 싶은",
+//            goalCount: 5,
+//            goalPercentage: 75,
+//            startDate: Date().addingTimeInterval(-14 * 24 * 60 * 60),
+//            endDate: Date().addingTimeInterval(3 * 24 * 60 * 60),
+//            daily: [
+//                Daily(value: 3, image: nil, diary: "매일 까먹지 말기", date: Date().addingTimeInterval(-14 * 24 * 60 * 60)),
+//                Daily(value:4, image: nil, diary: "까먹고 횟수를 넘겼다ㅠ", date: Date().addingTimeInterval(-13 * 24 * 60 * 60)),
+//                Daily(value:5, image:nil, diary:"오늘은 시작한 날!", date:Date().addingTimeInterval(-12 * 24 * 60 * 60)),
+//                Daily(value: 7, image: nil, diary: "매일 까먹지 말기", date: Date().addingTimeInterval(-11 * 24 * 60 * 60)),
+//                Daily(value:8, image: nil, diary: "까먹고 횟수를 넘겼다ㅠ", date: Date().addingTimeInterval(-10 * 24 * 60 * 60)),
+//                Daily(value:3, image:nil, diary:"오늘은 시작한 날!", date:Date().addingTimeInterval(-9 * 24 * 60 * 60)),
+//                Daily(value: 2, image: nil, diary: "매일 까먹지 말기", date: Date().addingTimeInterval(-8 * 24 * 60 * 60)),
+//                Daily(value:7, image: nil, diary: "까먹고 횟수를 넘겼다ㅠ", date: Date().addingTimeInterval(-7 * 24 * 60 * 60)),
+//                Daily(value:3, image:nil, diary:"오늘은 시작한 날!", date:Date().addingTimeInterval(-6 * 24 * 60 * 60)),
+//                Daily(value: 7, image: nil, diary: "매일 까먹지 말기", date: Date().addingTimeInterval(-5 * 24 * 60 * 60)),
+//                Daily(value:1, image: nil, diary: "까먹고 횟수를 넘겼다ㅠ", date: Date().addingTimeInterval(-4 * 24 * 60 * 60)),
+//                Daily(value:4, image:nil, diary:"오늘은 시작한 날!", date:Date().addingTimeInterval(-3 * 24 * 60 * 60)),
+//                Daily(value: 5, image: nil, diary: "매일 까먹지 말기", date: Date().addingTimeInterval(-2 * 24 * 60 * 60)),
+//                Daily(value:2, image: nil, diary: "까먹고 횟수를 넘겼다ㅠ", date: Date().addingTimeInterval(-1 * 24 * 60 * 60)),
+//                Daily(value: 3, image: nil, diary: "다시 시작하는거야!!", date: Date())
+//                
+//            ]
+//        ),
+//        HabitData(
+//            title: "이불 정리하기",
+//            type:"만들고 싶은",
+//            goalCount:1,
+//            goalPercentage: 80,
+//            startDate: Date(),
+//            endDate: Date().addingTimeInterval(10 * 24 * 60 * 60),
+//            daily: [
+//                Daily(value:1, image:nil, diary:"아침에 이불 정리하니까 상쾌하다", date: Date())
+//            ]
+//        )
+//    ]
 }
 
 

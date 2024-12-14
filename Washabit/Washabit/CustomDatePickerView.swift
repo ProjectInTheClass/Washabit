@@ -41,6 +41,7 @@ struct CustomDatePickerView: View {
                 Spacer()
                 Text("\(monthFormatter.string(from: selectedMonth))")
                     .font(.headline)
+                    .foregroundColor(Color("StrongBlue-font"))
                 Spacer()
                 Button(action: {
                     selectedMonth = Calendar.current.date(byAdding: .month, value: 1, to: selectedMonth)!
@@ -61,7 +62,7 @@ struct CustomDatePickerView: View {
                             Circle()
                                 .fill(backgroundColor(for: date))
                         )
-                        .foregroundColor(isBeforeToday ? Color.gray.opacity(0.5) : Color.primary)
+                        .foregroundColor(isBeforeToday ? Color.gray.opacity(0.5) : Color("StrongGray-font"))
                         .onTapGesture {
                             if !isBeforeToday {
                                 selectDate(date)
@@ -74,17 +75,15 @@ struct CustomDatePickerView: View {
     }
     
     private func backgroundColor(for date: Date) -> Color {
-        guard let startDate = startDate else { return Color.clear }
-        
         if let endDate = endDate {
             // 범위 내에 있는 날짜는 파란색 배경
-            if date > startDate && date < endDate {
+            if date > today && date < endDate {
                 return Color("LightBlue").opacity(0.44)
             }
-            else if date == startDate || date == endDate {
+            else if date == today || date == endDate {
                 return Color("LightBlue").opacity(0.8)
             }
-        } else if date == startDate {
+        } else if date == today {
             return Color("LightBlue").opacity(0.8) // 시작 날짜는 진한 파란색
         }
         
@@ -93,15 +92,14 @@ struct CustomDatePickerView: View {
     
     private func selectDate(_ date: Date) {
         if startDate == nil {
-            startDate = date
+            startDate = today
         } else if let start = startDate, let end = endDate {
-            startDate = date
-            endDate = nil
+            endDate = date
         } else if let start = startDate, endDate == nil {
             if date >= start {
                 endDate = date
             } else {
-                startDate = date
+                startDate = today
             }
         }
     }

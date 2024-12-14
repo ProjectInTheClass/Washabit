@@ -5,6 +5,7 @@ struct ExpandableCalendar: View {
     @State private var currentMonth: Date = Date() // 현재 달력 기준 날짜
     @State private var currentWeek: Date = Date()
     @State private var tabIndex = 1
+    @Binding var selectedDate:Date
 
     var body: some View {
         VStack {
@@ -31,31 +32,16 @@ struct ExpandableCalendar: View {
                     }
                     .padding(.trailing, 15)
                     
-//                    HStack {
-//                        Button(action: { changeMonth(by: -1) }) {
-//                            Image(systemName: "chevron.left")
-//                                .foregroundColor(.blue)
-//                        }
-//                        Spacer()
-//                        Text(currentMonthTitle)
-//                            .font(.headline)
-//                        Spacer()
-//                        Button(action: { changeMonth(by: 1) }) {
-//                            Image(systemName: "chevron.right")
-//                                .foregroundColor(.blue)
-//                        }
-//                    }
-//                    .padding(10)
                     HStack{
                         // 날짜 표시
                         TabView(selection:$tabIndex){
                             ForEach(0..<3, id:\.self){ index in
                                 if isMonthlyView {
-                                    MonthlyView(currentMonth: currentMonth)
+                                    MonthlyView(currentMonth: currentMonth, selectedDate: $selectedDate)
                                         .tag(index)
                                 }
                                 else{
-                                    WeeklyView(currentWeek: currentWeek)
+                                    WeeklyView(currentWeek: currentWeek, selectedDate: $selectedDate)
                                         .tag(index)
                                 }
                             }
@@ -85,8 +71,8 @@ struct ExpandableCalendar: View {
                 }
                 .padding()
             }
-            .frame(height: isMonthlyView ? 330 : 100) // 높이 조정
-            .animation(.easeInOut(duration: 0.5), value: isMonthlyView) // 크기 변화 애니메이션
+            .frame(height: isMonthlyView ? 330 : 120) // 높이 조정
+            .animation(.easeInOut, value: isMonthlyView) // 크기 변화 애니메이션
         }
         .padding()
         .onChange(of: currentWeek) { newWeek in
@@ -115,6 +101,7 @@ struct ExpandableCalendar: View {
 
 struct WeeklyView: View {
     let currentWeek: Date
+    @Binding var selectedDate:Date
     private let daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"]
 
     var body: some View {
@@ -135,12 +122,27 @@ struct WeeklyView: View {
                     VStack {
                         Text("\(Calendar.current.component(.day, from: date))")
                             .font(.title3)
-                            .foregroundColor(isToday(date) ? .blue : .primary)
+                            .background(
+                                Circle()
+                                    .fill(backgroundColor(for: date))
+                                    .frame(width:25, height:25)
+                            )
+                            .foregroundColor(Color("StrongGray-font"))
+                            .onTapGesture {
+                                selectedDate = date
+                            }
                     }
                     .frame(maxWidth: .infinity)
                 }
             }
         }
+    }
+    
+    private func backgroundColor(for date: Date) -> Color {
+        if Calendar.current.isDate(selectedDate, inSameDayAs: date) {
+            return Color("LightBlue")
+        }
+        return Color.clear
     }
 
     private var currentWeekDates: [Date] {
@@ -156,6 +158,7 @@ struct WeeklyView: View {
 
 struct MonthlyView: View {
     let currentMonth: Date
+    @Binding var selectedDate:Date
     private let daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"]
 
     var body: some View {
@@ -177,12 +180,26 @@ struct MonthlyView: View {
                         .font(.body)
                         .foregroundColor(isWithinCurrentMonth(date) ? .primary : .gray)
                         .padding(5)
-                        .background(isToday(date) ? Color.blue.opacity(0.3) : Color.clear)
+                        .background(
+                            Circle()
+                                .fill(backgroundColor(for: date))
+                                .frame(width:25, height:25)
+                        )
                         .cornerRadius(8)
+                        .onTapGesture {
+                            selectedDate = date
+                        }
                 }
             }
         }
         .padding(.top)
+    }
+    
+    private func backgroundColor(for date: Date) -> Color {
+        if Calendar.current.isDate(selectedDate, inSameDayAs: date) {
+            return Color("LightBlue")
+        }
+        return Color.clear
     }
 
     private var monthDates: [Date] {
@@ -210,7 +227,7 @@ struct MonthlyView: View {
         Calendar.current.isDateInToday(date)
     }
 }
-
-#Preview {
-    ExpandableCalendar()
-}
+//
+//#Preview {
+//    ExpandableCalendar(selectedDate: Date()
+//}

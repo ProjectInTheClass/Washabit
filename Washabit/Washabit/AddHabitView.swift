@@ -54,12 +54,13 @@ struct AddHabitView: View {
                             Image(systemName: "chevron.left")
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundColor(Color("StrongBlue-font"))
+                                .padding(.top,10)
+                                .padding(.leading,20)
                         }
                     }
                     Spacer()
                 }
-                .padding([.top,.leading],20)
-                ZStack{
+                HStack{
                     Text("새 목표 추가하기")
                         .foregroundColor(Color("StrongBlue-font"))
                         .bold()
@@ -83,7 +84,7 @@ struct AddHabitView: View {
                     }
                     .padding(.trailing, 40)
                 }
-                ZStack{
+                HStack{
                     Text("목표 설정하기")
                         .foregroundColor(Color("StrongBlue-font"))
                         .bold()
@@ -98,6 +99,7 @@ struct AddHabitView: View {
                             .padding([.top,.leading],20)
                             .bold()
                             .font(.system(size: 15))
+                            .foregroundColor(Color("StrongGray-font"))
                         HStack(spacing:25){
                             Spacer()
                             ForEach(options, id:\.self){ option in
@@ -117,7 +119,6 @@ struct AddHabitView: View {
                                 }
                                 .onTapGesture {
                                     selectedOption = option
-                                    print("Selected: \(selectedOption!)")
                                 }
                             }
                             Spacer()
@@ -128,6 +129,7 @@ struct AddHabitView: View {
                             .padding(.bottom, 10)
                             .bold()
                             .font(.system(size: 15))
+                            .foregroundColor(Color("StrongGray-font"))
                         CustomDatePickerView(startDate: $startDate, endDate: $endDate)
                     
                         HStack{
@@ -135,6 +137,7 @@ struct AddHabitView: View {
                                 .padding(.leading, 20)
                                 .bold()
                                 .font(.system(size: 15))
+                                .foregroundColor(Color("StrongGray-font"))
                             Spacer()
                             
                             Menu {
@@ -163,6 +166,7 @@ struct AddHabitView: View {
                                 .padding(.leading, 20)
                                 .bold()
                                 .font(.system(size: 15))
+                                .foregroundColor(Color("StrongGray-font"))
                         Spacer()
                             Menu {
                                 ForEach(percentageOptions, id: \.self) { option in
@@ -198,6 +202,7 @@ struct AddHabitView: View {
                         } else {
                             showConfirmation = true
                         }
+                    
                     }
                 label: {
                     Circle()
@@ -217,6 +222,7 @@ struct AddHabitView: View {
             .padding()
         }
         .ignoresSafeArea()
+        .ignoresSafeArea(.keyboard)
         .navigationBarBackButtonHidden(true)
         .alert(isPresented: $showAlert) {
             Alert(title: Text("알림"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
@@ -227,16 +233,16 @@ struct AddHabitView: View {
             titleVisibility: .visible
         ) {
             Button("등록", role: .none) {
-                HabitManager.addNewHabit(
-                    title,
-                    selectedOption ?? "고치고 싶은",
-                    selectedCount,
-                    selectedPercentage,
-                    startDate ?? Date(),
-                    endDate ?? Date(),
-                    to: modelContext
-                )
-                self.presentationMode.wrappedValue.dismiss()
+                    HabitManager.addNewHabit(
+                        title,
+                        selectedOption ?? "고치고 싶은",
+                        selectedCount,
+                        selectedPercentage,
+                        startDate ?? Date(),
+                        endDate ?? Date(),
+                        to: modelContext
+                    )
+                    self.presentationMode.wrappedValue.dismiss()
             }
             Button("취소", role: .cancel) {}
         }
