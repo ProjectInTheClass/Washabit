@@ -960,6 +960,23 @@ input, select, textarea {
 				}
 
 /* Thumbnails */
+#vertical-video {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 20%;
+    height: 100%;
+    z-index: 1000;
+}
+
+#vertical-video video {
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+}
+
+
+
 
 	#thumbnails {
 		display: -moz-flex;
