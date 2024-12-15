@@ -6,12 +6,34 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddHabitView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query private var habits: [HabitData]
     @State var title:String = ""
     @State private var selectedOption: String? = "고치고 싶은"
     @State private var date = Date()
-    @State private var totalHabitCount:Int = 30
+    @State private var startDate: Date? = nil
+    @State private var endDate: Date? = nil
+    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    @State private var showAlert: Bool = false
+    @State private var alertMessage: String = ""
+    @State private var showConfirmation: Bool = false
+
+       var backButton : some View {  // <-- 👀 커스텀 버튼
+           Button{
+               self.presentationMode.wrappedValue.dismiss()
+           } label: {
+               HStack {
+                   Image(systemName: "chevron.left")
+                       .font(.system(size: 18, weight: .bold))
+                       .foregroundColor(Color("StrongBlue-font"))
+               }
+           }
+       }
         
     let options = ["고치고 싶은", "만들고 싶은"]
     @State private var selectedCount: Int = 1
@@ -25,13 +47,20 @@ struct AddHabitView: View {
             Color("MainColor")
             VStack{
                 HStack{
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(Color("StrongBlue-font"))
+                    Button{
+                        self.presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        HStack {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 18, weight: .bold))
+                                .foregroundColor(Color("StrongBlue-font"))
+                                .padding(.top,10)
+                                .padding(.leading,20)
+                        }
+                    }
                     Spacer()
                 }
-                .padding([.top,.leading],20)
-                ZStack{
+                HStack{
                     Text("새 목표 추가하기")
                         .foregroundColor(Color("StrongBlue-font"))
                         .bold()
@@ -46,7 +75,7 @@ struct AddHabitView: View {
                         .cornerRadius(12)
                     HStack{
                         Spacer()
-                        Text("\(totalHabitCount)번째 목표")
+                        Text("\(habits.count + 1)번째 목표")
                             .font(.system(size: 13, weight: .bold))
                             .foregroundColor(.white)
                             .frame(width:85, height:28)
@@ -55,7 +84,7 @@ struct AddHabitView: View {
                     }
                     .padding(.trailing, 40)
                 }
-                ZStack{
+                HStack{
                     Text("목표 설정하기")
                         .foregroundColor(Color("StrongBlue-font"))
                         .bold()
@@ -70,6 +99,7 @@ struct AddHabitView: View {
                             .padding([.top,.leading],20)
                             .bold()
                             .font(.system(size: 15))
+                            .foregroundColor(Color("StrongGray-font"))
                         HStack(spacing:25){
                             Spacer()
                             ForEach(options, id:\.self){ option in
@@ -89,7 +119,6 @@ struct AddHabitView: View {
                                 }
                                 .onTapGesture {
                                     selectedOption = option
-                                    print("Selected: \(selectedOption!)")
                                 }
                             }
                             Spacer()
@@ -100,13 +129,15 @@ struct AddHabitView: View {
                             .padding(.bottom, 10)
                             .bold()
                             .font(.system(size: 15))
-                        CustomDatePickerView()
+                            .foregroundColor(Color("StrongGray-font"))
+                        CustomDatePickerView(startDate: $startDate, endDate: $endDate)
                     
                         HStack{
                             Text(selectedOption == "고치고 싶은" ? "하루 제한 횟수" : "하루 실행 횟수")
                                 .padding(.leading, 20)
                                 .bold()
                                 .font(.system(size: 15))
+                                .foregroundColor(Color("StrongGray-font"))
                             Spacer()
                             
                             Menu {
@@ -135,6 +166,7 @@ struct AddHabitView: View {
                                 .padding(.leading, 20)
                                 .bold()
                                 .font(.system(size: 15))
+                                .foregroundColor(Color("StrongGray-font"))
                         Spacer()
                             Menu {
                                 ForEach(percentageOptions, id: \.self) { option in
@@ -163,22 +195,57 @@ struct AddHabitView: View {
                 .cornerRadius(15)
                 HStack{
                     Spacer()
+                    Button{
+                        if title.isEmpty || startDate == nil || endDate == nil {
+                            alertMessage = "습관 정보를 입력해주세요."
+                            showAlert = true
+                        } else {
+                            showConfirmation = true
+                        }
+                    
+                    }
+                label: {
                     Circle()
                         .fill(Color(.white))
                         .frame(width:66, height:66)
                         .shadow(color: Color.black.opacity(0.25), radius: 8, x: 0, y: 2)
                         .overlay(
-                            Image(systemName:"checkmark")
-                            .font(.system(size: 20))
-                            .foregroundColor(Color("StrongBlue-font"))
+                            
+                            HStack {
+                                Image("Icons/checkmark")
+                            }
                         )
-                }
+                }}
                 .padding(.trailing,20)
                 .padding(.top,10)
             }
             .padding()
         }
         .ignoresSafeArea()
+        .ignoresSafeArea(.keyboard)
+        .navigationBarBackButtonHidden(true)
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("알림"), message: Text(alertMessage), dismissButton: .default(Text("확인")))
+        }
+        .confirmationDialog(
+            "습관을 등록하시겠습니까?",
+            isPresented: $showConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("등록", role: .none) {
+                    HabitManager.addNewHabit(
+                        title,
+                        selectedOption ?? "고치고 싶은",
+                        selectedCount,
+                        selectedPercentage,
+                        startDate ?? Date(),
+                        endDate ?? Date(),
+                        to: modelContext
+                    )
+                    self.presentationMode.wrappedValue.dismiss()
+            }
+            Button("취소", role: .cancel) {}
+        }
     }
 }
 

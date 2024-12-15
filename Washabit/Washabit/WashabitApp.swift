@@ -12,7 +12,7 @@ import SwiftData
 struct WashabitApp: App {
     var body: some Scene {
         WindowGroup {
-            SwiftMainView()
+            ContentView()
                 .modelContainer(for: [HabitData.self, Daily.self]) // 등록된 모델 추가
         }
     }

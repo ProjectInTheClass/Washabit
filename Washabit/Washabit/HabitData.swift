@@ -14,16 +14,20 @@ import Foundation
 class HabitData: Identifiable {
     @Attribute(.unique) var id: UUID
     var title: String
-    var goal: Int
+    var type: String
+    var goalCount: Int
+    var goalPercentage: Int
     var startDate: Date
     var endDate: Date
     var isFlipped: Bool
     @Relationship(deleteRule: .cascade) var daily: [Daily]
 
-    init(title: String, goal: Int, startDate: Date, endDate: Date, isFlipped: Bool = false, daily: [Daily]) {
+    init(title: String, type: String, goalCount: Int, goalPercentage: Int, startDate: Date, endDate: Date, isFlipped: Bool = false, daily: [Daily]) {
         self.id = UUID()
         self.title = title
-        self.goal = goal
+        self.type = type
+        self.goalCount = goalCount
+        self.goalPercentage = goalPercentage
         self.startDate = startDate
         self.endDate = endDate
         self.isFlipped = isFlipped
@@ -40,11 +44,11 @@ class HabitData: Identifiable {
 @Model
 class Daily: Identifiable {
     var count: Int
-    var image: String
+    var image: Data?
     var diary: String
     var date: Date
 
-    init(value: Int, image: String, diary: String, date: Date) {
+    init(value: Int, image: Data?, diary: String, date: Date) {
         self.count = value
         self.image = image
         self.diary = diary
@@ -62,7 +66,7 @@ extension HabitData {
         for daily in sortedDaily.reversed() {
             if Calendar.current.isDateInToday(daily.date) || Calendar.current.isDate(daily.date, inSameDayAs: today.addingTimeInterval(-Double(consecutiveDays) * 24 * 60 * 60)) {
                 // 목표 달성 여부 확인
-                if daily.count >= goal {
+                if (type == "고치고 싶은" && daily.count <= goalCount) || (type == "만들고 싶은" && daily.count >= goalCount) {
                     consecutiveDays += 1
                 } else {
                     break // 연속 달성이 끊기면 종료
@@ -72,6 +76,48 @@ extension HabitData {
         
         return consecutiveDays
     }
+    
+    
+    // 더미데이터
+//    static let sampleData: [HabitData] = [
+//        HabitData(
+//            title: "손톱 물어뜯기 그만!",
+//            type:"고치고 싶은",
+//            goalCount: 5,
+//            goalPercentage: 75,
+//            startDate: Date().addingTimeInterval(-14 * 24 * 60 * 60),
+//            endDate: Date().addingTimeInterval(3 * 24 * 60 * 60),
+//            daily: [
+//                Daily(value: 3, image: nil, diary: "매일 까먹지 말기", date: Date().addingTimeInterval(-14 * 24 * 60 * 60)),
+//                Daily(value:4, image: nil, diary: "까먹고 횟수를 넘겼다ㅠ", date: Date().addingTimeInterval(-13 * 24 * 60 * 60)),
+//                Daily(value:5, image:nil, diary:"오늘은 시작한 날!", date:Date().addingTimeInterval(-12 * 24 * 60 * 60)),
+//                Daily(value: 7, image: nil, diary: "매일 까먹지 말기", date: Date().addingTimeInterval(-11 * 24 * 60 * 60)),
+//                Daily(value:8, image: nil, diary: "까먹고 횟수를 넘겼다ㅠ", date: Date().addingTimeInterval(-10 * 24 * 60 * 60)),
+//                Daily(value:3, image:nil, diary:"오늘은 시작한 날!", date:Date().addingTimeInterval(-9 * 24 * 60 * 60)),
+//                Daily(value: 2, image: nil, diary: "매일 까먹지 말기", date: Date().addingTimeInterval(-8 * 24 * 60 * 60)),
+//                Daily(value:7, image: nil, diary: "까먹고 횟수를 넘겼다ㅠ", date: Date().addingTimeInterval(-7 * 24 * 60 * 60)),
+//                Daily(value:3, image:nil, diary:"오늘은 시작한 날!", date:Date().addingTimeInterval(-6 * 24 * 60 * 60)),
+//                Daily(value: 7, image: nil, diary: "매일 까먹지 말기", date: Date().addingTimeInterval(-5 * 24 * 60 * 60)),
+//                Daily(value:1, image: nil, diary: "까먹고 횟수를 넘겼다ㅠ", date: Date().addingTimeInterval(-4 * 24 * 60 * 60)),
+//                Daily(value:4, image:nil, diary:"오늘은 시작한 날!", date:Date().addingTimeInterval(-3 * 24 * 60 * 60)),
+//                Daily(value: 5, image: nil, diary: "매일 까먹지 말기", date: Date().addingTimeInterval(-2 * 24 * 60 * 60)),
+//                Daily(value:2, image: nil, diary: "까먹고 횟수를 넘겼다ㅠ", date: Date().addingTimeInterval(-1 * 24 * 60 * 60)),
+//                Daily(value: 3, image: nil, diary: "다시 시작하는거야!!", date: Date())
+//                
+//            ]
+//        ),
+//        HabitData(
+//            title: "이불 정리하기",
+//            type:"만들고 싶은",
+//            goalCount:1,
+//            goalPercentage: 80,
+//            startDate: Date(),
+//            endDate: Date().addingTimeInterval(10 * 24 * 60 * 60),
+//            daily: [
+//                Daily(value:1, image:nil, diary:"아침에 이불 정리하니까 상쾌하다", date: Date())
+//            ]
+//        )
+//    ]
 }
 
 
