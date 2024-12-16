@@ -1,110 +1,359 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <!--
-	Lens by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+	App by FreeHTML5.co
+	Twitter: http://twitter.com/fh5co
+	URL: http://freehtml5.co
 -->
-<html>
-	<head>
-		<title>Washabit</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload-0 is-preload-1 is-preload-2">
+<html lang="en">
 
-		<!-- Main -->
-			<div id="main">
+<head>
+	<meta charset="UTF-8">
+	<title>WasHabit</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Free HTML5 Website Template by FreeHTML5.co" />
+	<meta name="keywords"
+		content="free website templates, free html5, free template, free bootstrap, free website template, html5, css3, mobile first, responsive" />
+	<meta name="author" content="FreeHTML5.co" />
 
-				<!-- Header -->
-					<header id="header">
-						<h1>Washabit</h1>
-						<p>SW Studio2 <br>강현중 장우정 황민욱<br>
-                        <a href="http://html5up.net">HTML5 UP</a></p>
-						<ul class="icons">
-							<li><a href="https://github.com/ProjectInTheClass/Washabit" class="icon brands fa-github"><span class="label">Github</span></a></li>
-                            <li><a href="https://github.com/ProjectInTheClass/Washabit" class="icon brands fa-youtube"><span class="label">Github</span></a></li>
-						</ul>
-					</header>
+	<!-- Facebook and Twitter integration -->
+	<meta property="og:title" content="" />
+	<meta property="og:image" content="" />
+	<meta property="og:url" content="" />
+	<meta property="og:site_name" content="" />
+	<meta property="og:description" content="" />
+	<meta name="twitter:title" content="" />
+	<meta name="twitter:image" content="" />
+	<meta name="twitter:url" content="" />
+	<meta name="twitter:card" content="" />
 
-                    <section id="thumbnails">
-                        <article>
-                            <a class="thumbnail" href="images/source/01.jpg">
-                                <img src="images/source/01.jpg" alt="" />
-                            </a>
-                            <h2>Washabit</h2>
-                            <p><br></p>
-                        </article>
-                        
-                        <article>
-                            <a class="thumbnail" href="images/source/02.jpg">
-                                <img src="images/source/02.jpg" alt="" />
-                            </a>
-                            <div id="vertical-video">
-                                <video controls autoplay muted loop>
-                                    <source src="images/source/01.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                            <h2>탭으로 간단히 기록</h2>
-                            <p></p>
-                        </article>
-                        <article>
-                            <a class="thumbnail" href="images/source/03.jpg">
-                                <img src="images/source/03.jpg" alt="" />
-                            </a>
-                            <div id="vertical-video">
-                                <video controls autoplay muted loop>
-                                    <source src="images/source/03.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                            <h2>목표별 세부 정보</h2>
-                            <p></p>
-                        </article>
-                        <article>
-                            <a class="thumbnail" href="images/source/05.jpg">
-                                <img src="images/source/05.jpg" alt="" />
-                            </a>
-                            <div id="vertical-video">
-                                <video controls autoplay muted loop>
-                                    <source src="images/source/03.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                            <h2>목표 추가</h2>
-                            <p></p>
-                        </article>
-                        <article>
-                            <a class="thumbnail" href="images/source/04.jpg">
-                                <img src="images/source/04.jpg" alt="" />
-                            </a>
-                            <div id="vertical-video">
-                                <video controls autoplay muted loop>
-                                    <source src="images/source/04.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                            <h2>목표별 피드</h2>
-                            <p></p>
-                        </article>
-                    </section>
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<!-- Owl Carousel  -->
+	<link rel="stylesheet" href="css/owl.carousel.css">
+	<link rel="stylesheet" href="css/owl.theme.default.min.css">
+	<!-- Animate.css -->
+	<link rel="stylesheet" href="css/animate.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+		integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
-				<!-- Footer -->
-					<footer id="footer">
-						<ul class="copyright">
-							<li>&copy; Untitled.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a>.</li>
-						</ul>
-					</footer>
+	<!-- Theme style  -->
+	<link rel="stylesheet" href="css/style.css">
+	<!-- font style - noto Sans kr -->
+	<link rel="stylesheet" href="css/fonts.css">
+</head>
+
+<body>
+
+
+	<div id="page-wrap">
+
+
+		<!-- ==========================================================================================================
+													   HERO
+		 ========================================================================================================== -->
+
+		<div id="fh5co-hero-wrapper">
+			<nav class="container navbar navbar-expand-lg main-navbar-nav navbar-light">
+				<a class="navbar-brand" href="" style="font-family: notoSans-medium;">WasHabit</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse"
+					data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav nav-items-center ml-auto mr-auto">
+						<li class="nav-item active">
+							<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#"
+								onclick="$('#fh5co-features').goTo();return false;">Features</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#" onclick="$('#fh5co-reviews').goTo();return false;">Next
+								Goal</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#" onclick="$('#fh5co-download').goTo();return false;">Vision</a>
+						</li>
+					</ul>
+					<div class="social-icons-header">
+						<!-- <a href="https://www.facebook.com/fh5co"><i class="fab fa-facebook-f"></i></a>
+						<a href="https://freehtml5.co"><i class="fab fa-instagram"></i></a>
+						<a href="https://www.twitter.com/fh5co"><i class="fab fa-twitter"></i></a> -->
+					</div>
+				</div>
+			</nav>
+
+			<div class="container fh5co-hero-inner">
+				<h1 class="animated fadeIn wow" data-wow-delay="0.4s" style="font-family:notoSans-bold;">WasHabit
+				</h1>
+				<p class="animated fadeIn wow" style="width:800px; font-family: notoSans; font-size:20px"
+					data-wow-delay="0.67s">
+					바쁜 하루 일상 속, 작은 행동으로 습관을
+					개선하세요!<br />
+					고치고 싶은 습관도, 만들고 싶은 습관도, Washabit과 함께 시작하세요. </p>
+				<!-- <button class="btn btn-md download-btn-first wow fadeInLeft animated" data-wow-delay="0.85s"
+					onclick="$('#fh5co-download').goTo();return false;">Download</button>
+				<button class="btn btn-md features-btn-first animated fadeInLeft wow" data-wow-delay="0.95s"
+					onclick="$('#fh5co-features').goTo();return false;">Features</button> -->
+				<div style="width:500px; height:auto; margin-top:80px;"
+					class="fh5co-hero-smartphone animated fadeInRight wow" data-wow-delay="1s">
+					<img src="img/메인이미지.svg" style="margin-top:-200px; width:100%; height:100%;" alt="Smartphone">
+				</div>
 
 			</div>
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/main.js"></script>
 
-	</body>
+		</div> <!-- first section wrapper -->
+
+
+		<!-- ==========================================================================================================
+													 ADVANTAGES
+		 ========================================================================================================== -->
+
+		<div class="fh5co-advantages-outer">
+			<div class="container">
+				<!-- <h1 class="second-title"
+					style="font-family: notoSans-medium; margin-top:-100px; z-index: 3; position:absolute"><span
+						class="span-perfect">간편한 클릭커</span> <span class="span-features">횟수
+						기록</span></h1>
+				<small>Only necessary</small> -->
+
+				<div class="row fh5co-advantages-grid-columns wow animated fadeIn" data-wow-delay="0.36s">
+
+					<div class="col-sm-4">
+						<img class="grid-image" src="img/icon-1.png" alt="Icon-1">
+						<h1 class="grid-title" style="font-family: notoSans-medium; color:#32616A;">간편한 습관 관리</h1>
+						<p class="grid-desc" style="font-family:notoSans; color:#32616A; font-size:14px">클릭 한번으로 횟수 기록하기
+						</p>
+					</div>
+
+					<div class="col-sm-4">
+						<img class="grid-image" src="img/icon-2.png" alt="Icon-2">
+						<h1 class="grid-title" style="font-family:notoSans-medium; color: #32616A;">일상 속 습관의 수치화</h1>
+						<p class="grid-desc" style="font-family:notoSans; color:#32616A; font-size:14px">숫자로 확인할 수 있는 나의
+							습관
+						</p>
+					</div>
+
+					<div class="col-sm-4">
+						<img class="grid-image" src="img/icon-3.png" alt="Icon-3">
+						<h1 class="grid-title" style="font-family:notoSans-medium; color: #32616A;">한눈에 보는 기록</h1>
+						<p class="grid-desc" style="font-family:notoSans; color:#32616A; font-size:14px">작지만 확실한 변화를 한눈에
+						</p>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+
+		<!-- ==========================================================================================================
+													  SLIDER
+		 ========================================================================================================== -->
+
+		<div class="fh5co-slider-outer wow fadeIn" data-wow-delay="0.36s">
+			<h1 style="font-family:notoSans-bold; color:#2B9AB0">주요 기능 및 화면</h1>
+			<small style="font-family:notoSans">화면과 기능을 살펴보세요!</small>
+			<div class="container fh5co-slider-inner">
+
+				<div class="owl-carousel owl-theme">
+
+					<div class="item"><img src="img/메인화면.png" alt=""></div>
+					<div class="item"><img src="img/뒷면.png" alt=""></div>
+					<div class="item"><img src="img/목표추가.png" alt=""></div>
+					<div class="item"><img src="img/피드.png" alt=""></div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+
+		<!-- ==========================================================================================================
+													  FEATURES
+		 ========================================================================================================== -->
+
+		<div class="curved-bg-div wow animated fadeIn" data-wow-delay="0.15s"></div>
+		<div id="fh5co-features" class="fh5co-features-outer">
+			<div class="container">
+
+				<div class="row fh5co-features-grid-columns">
+
+					<div class="col-sm-6 in-order-1 wow animated fadeInLeft" data-wow-delay="0.22s">
+						<div class="col-sm-image-container">
+							<video class="img-float-left" style="width:300px" src="videos/water_fill.mp4" autoplay muted
+								loop>
+								<span class="span-new">NEW</span>
+								<span class="span-free">Free</span>
+						</div>
+					</div>
+
+					<div class="col-sm-6 in-order-2 sm-6-content wow animated fadeInRight" data-wow-delay="0.22s">
+						<h1 style="font-family:notoSans-medium; color:#2B9AB0">클릭커로 간편하게 습관을 기록</h1>
+						<p style="font-family: notoSans; width:500px"> <span
+								style="font-family:notoSans-bold; font-size:16px">세탁기를 탭해서 횟수를 간단하게 기록</span>할 수 있습니다.
+							<br /> 횟수를
+							올릴수록 물이 차오르는 애니메이션을 통해 생동감 있는 UI를 구현했습니다.
+						</p>
+
+					</div>
+
+					<div class="col-sm-6 in-order-3 sm-6-content wow animated fadeInLeft" data-wow-delay="0.22s">
+						<h1 style="font-family: notoSans-bold; color:#2B9AB0">습관 상세정보를 열람</h1>
+						<p style="font-family: notoSans; width:500px">습관별로
+							횟수를 기록할 수 있는 세탁기가 있고, 뒷면에서는 <br />
+							<span style="font-family:notoSans-bold; font-size:16px">진행도, 2주간의 횟수
+								기록, 피드로의 이동
+								버튼</span>이 표시됩니다.
+						</p>
+
+					</div>
+
+					<div class="col-sm-6 in-order-4 wow animated fadeInRight" data-wow-delay="0.22s">
+						<video class="img-float-right" src="videos/2week.mp4" style="width:300px" alt="smartphone-2"
+							autoplay muted loop>
+					</div>
+
+					<div class="col-sm-6 in-order-5 wow animated fadeInLeft" data-wow-delay="0.22s">
+						<div class="col-sm-image-container">
+							<video class="img-float-left" src="videos/daily.mp4" style="width:300px;" alt="smartphone-3"
+								autoplay muted loop>
+								<!-- <span class="span-data"></span>
+							<span class="span-percent">100%</span> -->
+						</div>
+					</div>
+					<div class="col-sm-6 in-order-6 sm-6-content wow animated fadeInRight" data-wow-delay="0.22s">
+						<h1 style="font-family: notoSans-bold; color:#2B9AB0">습관별 피드에서 하루를 기록</h1>
+						<p style="font-family: notoSans; width:700px">각 습관별로 일별 피드가 있고, 자신의 <span
+								style="font-family:notoSans-bold; font-size:16px">하루 습관 기록을 사진과 함께
+							</span> 남길 수 있습니다. <br /> 이전 습관의 기록들을 캘린더에서 열람할 수 있고, 얼마나 성장했는지 확인할 수 있습니다.
+						</p>
+					</div>
+
+					<div id="fh5co-reviews" class="fh5co-reviews-outer" style="height:800px;">
+						<h1 style="font-family:notoSans-bold; color:#2B9AB0">시나리오 시연 영상</h1>
+						<small style="font-family: notoSans; color:#32616A">WasHabit을 체험해보세요.</small>
+						<div style="display:flex; justify-content: center; align-items: center; margin-top:30px">
+							<video src="videos/시연.mp4" style="width:270px" autoplay muted loop>
+						</div>
+					</div>
+
+
+				</div> <!-- row -->
+
+
+			</div>
+		</div>
+
+
+		<!-- ==========================================================================================================
+													  REVIEWS
+		 ========================================================================================================== -->
+
+		<div id="fh5co-reviews" class="fh5co-reviews-outer">
+			<h1 style="font-family:notoSans-bold; color:#2B9AB0">WasHabit의 다음 목표</h1>
+			<small style="font-family: notoSans; color:#32616A">위젯 기능 추가</small>
+			<div class="container fh5co-reviews-inner">
+				<div class="row justify-content-center">
+					<div class="col-sm-5 wow fadeIn animated" style="margin-top:-50px" data-wow-delay="0.25s">
+						<img class="float-left" src="img/위젯.svg" />
+					</div>
+					<div class="col-sm-5 testimonial-2 wow fadeIn animated" data-wow-delay="0.67s">
+
+						<p class="testimonial-desc" style="font-family: notoSans-medium; color:#32616A">필요한 정보를 한눈에,
+							위젯으로 더 빠르고 더 간편하게
+						</p>
+						<small class="testimonial-author" style="font-family: notoSans;">앱을 켜지 않아도 횟수를 기록할 수
+							있어요!</small>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
+		<!-- ==========================================================================================================
+                                                 BOTTOM
+    ========================================================================================================== -->
+
+		<div id="fh5co-download" class="fh5co-bottom-outer">
+			<div class="overlay">
+				<div class="container fh5co-bottom-inner">
+					<div class="row">
+						<div class="col-sm-6" style="margin-top:50px">
+							<h1 style="font-family: notoSans-medium; color:#32616A">바쁜 일상 속, <br />작은 행동으로 큰 성장을 만드는 경험
+							</h1>
+							<p style="font-family: notoSans; color:#32616A">WasHabit과 함께해보세요!</p>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- ==========================================================================================================
+                                               SECTION 7 - SUB FOOTER
+    ========================================================================================================== -->
+
+		<footer class="footer-outer">
+			<div class="container footer-inner">
+
+				<div class="footer-three-grid wow fadeIn animated" data-wow-delay="0.66s">
+					<div class="column-1-3">
+						<h1 style="font-family: notoSans-bold;">WasHabit</h1>
+					</div>
+					<div class="column-2-3">
+						<nav class="footer-nav">
+							<ul>
+								<a href="#" onclick="$('#fh5co-hero-wrapper').goTo();return false;">
+									<li>Home</li>
+								</a>
+								<a href="#" onclick="$('#fh5co-features').goTo();return false;">
+									<li>Features</li>
+								</a>
+								<a href="#" onclick="$('#fh5co-reviews').goTo();return false;">
+									<li>Next Goal</li>
+								</a>
+								<a href="#" onclick="$('#fh5co-download').goTo();return false;">
+									<li class="active">Vision</li>
+								</a>
+							</ul>
+						</nav>
+					</div>
+					<div class="column-3-3">
+						<div class="social-icons-footer">
+							<!-- <a href="https://www.facebook.com/fh5co"><i class="fab fa-facebook-f"></i></a>
+							<a href="https://freehtml5.co"><i class="fab fa-instagram"></i></a>
+							<a href="https://www.twitter.com/fh5co"><i class="fab fa-twitter"></i></a> -->
+						</div>
+					</div>
+				</div>
+
+				<span class="border-bottom-footer"></span>
+
+				<p class="copyright">&copy; 2018 App. All rights reserved. Design by <a href="https://freehtml5.co"
+						target="_blank">FreeHTML5</a>.</p>
+
+			</div>
+		</footer>
+
+
+
+
+	</div> <!-- main page wrapper -->
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.js"></script>
+	<script src="js/owl.carousel.js"></script>
+	<script src="js/wow.min.js"></script>
+	<script src="js/main.js"></script>
+</body>
+
 </html>
