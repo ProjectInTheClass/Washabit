@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A3061582D16FFE2001CDACD /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3061572D16FFD9001CDACD /* GalleryView.swift */; };
+		7AE9B6152D1889060060E267 /* FinishedHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE9B6142D1888290060E267 /* FinishedHabitView.swift */; };
 		9A115D0D2CDB093000736B21 /* SwiftMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A115D0C2CDB093000736B21 /* SwiftMainView.swift */; };
 		9AA2CFD22CFECD60007E69E1 /* CustomDatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA2CFD12CFECD60007E69E1 /* CustomDatePickerView.swift */; };
 		9AA2CFD42CFECD97007E69E1 /* AddHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA2CFD32CFECD97007E69E1 /* AddHabitView.swift */; };
@@ -42,6 +44,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7A3061572D16FFD9001CDACD /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
+		7AE9B6142D1888290060E267 /* FinishedHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishedHabitView.swift; sourceTree = "<group>"; };
 		9A115D0C2CDB093000736B21 /* SwiftMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMainView.swift; sourceTree = "<group>"; };
 		9AA2CFD12CFECD60007E69E1 /* CustomDatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDatePickerView.swift; sourceTree = "<group>"; };
 		9AA2CFD32CFECD97007E69E1 /* AddHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHabitView.swift; sourceTree = "<group>"; };
@@ -110,6 +114,8 @@
 		9ACA482A2CD9BF1F000D4D4B /* Washabit */ = {
 			isa = PBXGroup;
 			children = (
+				7AE9B6142D1888290060E267 /* FinishedHabitView.swift */,
+				7A3061572D16FFD9001CDACD /* GalleryView.swift */,
 				9A115D0C2CDB093000736B21 /* SwiftMainView.swift */,
 				9ACA8C852CF338170070611C /* Utility.swift */,
 				9ACA8CA32CFEC3930070611C /* ExpandableCalendar.swift */,
@@ -289,8 +295,10 @@
 				9ACA8C882CF3382B0070611C /* HabitData.swift in Sources */,
 				9ACA482C2CD9BF1F000D4D4B /* WashabitApp.swift in Sources */,
 				9A115D0D2CDB093000736B21 /* SwiftMainView.swift in Sources */,
+				7A3061582D16FFE2001CDACD /* GalleryView.swift in Sources */,
 				9AA2CFD22CFECD60007E69E1 /* CustomDatePickerView.swift in Sources */,
 				9AA2CFD42CFECD97007E69E1 /* AddHabitView.swift in Sources */,
+				7AE9B6152D1889060060E267 /* FinishedHabitView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

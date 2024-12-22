@@ -11,7 +11,7 @@ import SwiftData
 struct AddHabitView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var habits: [HabitData]
-    @State var title:String = ""
+    @State private var title:String = ""
     @State private var selectedOption: String? = "고치고 싶은"
     @State private var date = Date()
     @State private var startDate: Date? = nil
@@ -73,6 +73,7 @@ struct AddHabitView: View {
                         .frame(width:327, height:62)
                         .background(Color(.white))
                         .cornerRadius(12)
+                        .foregroundColor(Color("StrongGray-font"))
                     HStack{
                         Spacer()
                         Text("\(habits.count + 1)번째 목표")

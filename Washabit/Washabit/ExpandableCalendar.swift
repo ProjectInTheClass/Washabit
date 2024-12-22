@@ -19,6 +19,7 @@ struct ExpandableCalendar: View {
                         Text(currentMonthTitle)
                             .font(.headline)
                             .padding(.leading,15)
+                            .foregroundColor(Color("StrongGray-font"))
                         Spacer()
                         Button(action: {
                             withAnimation{

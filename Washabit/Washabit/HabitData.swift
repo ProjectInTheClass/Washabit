@@ -44,14 +44,38 @@ class HabitData: Identifiable {
 @Model
 class Daily: Identifiable {
     var count: Int
-    var image: Data?
-    var diary: String
+    @Relationship(deleteRule: .cascade) var diary: [Diary]?
     var date: Date
 
-    init(value: Int, image: Data?, diary: String, date: Date) {
+    init(value: Int, diary: [Diary]?, date: Date) {
         self.count = value
-        self.image = image
         self.diary = diary
+        self.date = date
+    }
+    
+    var sortedDiary: [Diary] {
+        if let diary = diary {
+            return diary.sorted { $0.date > $1.date }
+        }
+        else{
+            return []
+        }
+    }
+}
+
+@Model
+class Diary: Identifiable {
+    @Attribute(.unique) var id: UUID
+    var count: Int
+    var content: String
+    var image: Data?
+    var date: Date
+    
+    init(count: Int, content: String, image:Data?, date:Date){
+        self.id = UUID()
+        self.count = count
+        self.content = content
+        self.image = image
         self.date = date
     }
 }
@@ -59,12 +83,16 @@ class Daily: Identifiable {
 extension HabitData {
     /// 오늘을 기준으로 몇 일 연속 목표를 달성했는지 계산
     func consecutiveAchievedDays() -> Int {
-        let today = Date()
+        let today = Calendar.current.startOfDay(for: Date())
         var consecutiveDays = 0
         
         // 정렬된 Daily 데이터를 역순으로 순회
         for daily in sortedDaily.reversed() {
-            if Calendar.current.isDateInToday(daily.date) || Calendar.current.isDate(daily.date, inSameDayAs: today.addingTimeInterval(-Double(consecutiveDays) * 24 * 60 * 60)) {
+            let dailyDate = Calendar.current.startOfDay(for: daily.date)
+            if dailyDate > today {
+                continue
+            }
+            if Calendar.current.isDateInToday(dailyDate) || Calendar.current.isDate(dailyDate, inSameDayAs: today.addingTimeInterval(-Double(consecutiveDays) * 24 * 60 * 60)) {
                 // 목표 달성 여부 확인
                 if (type == "고치고 싶은" && daily.count <= goalCount) || (type == "만들고 싶은" && daily.count >= goalCount) {
                     consecutiveDays += 1
@@ -72,11 +100,24 @@ extension HabitData {
                     break // 연속 달성이 끊기면 종료
                 }
             }
+            
         }
         
         return consecutiveDays
     }
     
+    func finishedHabits(from habits: [HabitData]) -> [HabitData] {
+        let today = Calendar.current.startOfDay(for: Date())
+        
+        // endDate가 오늘보다 이전인 habit 필터링
+        let filteredHabits = habits.filter { habit in
+            habit.endDate < today
+        }
+        
+        return filteredHabits
+    }
+
+
     
     // 더미데이터
 //    static let sampleData: [HabitData] = [

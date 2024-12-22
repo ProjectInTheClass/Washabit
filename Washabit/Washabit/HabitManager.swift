@@ -19,29 +19,27 @@ class HabitManager {
     ) {
         let newHabit = HabitData(title: title, type: type, goalCount: goalCount, goalPercentage: goalPercentage, startDate: startDate, endDate: endDate, daily: [])
         modelContext.insert(newHabit)
-//
-//        let daysDiff = daysDifference(date1: startDate, date2: endDate)
-//        let calendar = Calendar.current
-//        var currentDate = startDate
-//
-//        for _ in 0...daysDiff {
-//            let dailyItem = Daily(value: 0, image: "exampleimage", diary: "Diary Entry", date: Date())
-//            newHabit.daily.append(dailyItem)
-//            modelContext.insert(dailyItem)
-//            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
-//        }
         
-        let dailyItem = Daily(value: 0, image: nil, diary: "", date: startDate)
-       newHabit.daily.append(dailyItem)
-       modelContext.insert(dailyItem)
+        let calendar = Calendar.current
+        var currentDate = calendar.startOfDay(for: startDate)
+        let endOfDay = calendar.startOfDay(for: endDate)
+        
+        while currentDate <= endOfDay{
+            let dailyItem = Daily(value:0, diary:nil, date:currentDate)
+            newHabit.daily.append(dailyItem)
+            modelContext.insert(dailyItem)
+            
+            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
+        }
+        
        saveContext(modelContext)
     }
     
-    static func addNewDaily(
+    static func addNewDiary(
         _ habitId: UUID,
-        _ value: Int,
+        _ count: Int,
+        _ content: String,
         _ image: Data,
-        _ diary: String,
         _ date: Date,
         to modelContext:ModelContext
     ){
@@ -50,9 +48,20 @@ class HabitManager {
             return
         }
         
-        let dailyItem = Daily(value:value, image:image, diary:diary, date:date)
-        habit.daily.append(dailyItem)
-        modelContext.insert(dailyItem)
+        let calendar = Calendar.current
+        let daily = habit.daily.first {
+            calendar.isDate($0.date, equalTo: date, toGranularity: .day)
+        }
+        
+        let diaryItem = Diary(count: count, content: content, image: image, date: date)
+        daily?.diary?.append(diaryItem)
+        modelContext.insert(diaryItem)
+        
+        saveContext(modelContext)
+    }
+    
+    static func deleteDiary(_ diary:Diary, to modelContext: ModelContext){
+        modelContext.delete(diary)
         saveContext(modelContext)
     }
     

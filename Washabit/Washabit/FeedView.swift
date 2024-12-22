@@ -28,7 +28,7 @@ struct FeedView: View {
 //    private var habit :HabitData? {
 //        habits.first(where: {$0.title == "운동하기"})
 //    }
-    @State private var diary:String = ""
+    @State private var content:String = ""
     
     var body: some View {
         ZStack{
@@ -67,16 +67,13 @@ struct FeedView: View {
                 
                 ExpandableCalendar(selectedDate: $selectedDate)
                     .frame(width:375)
-<<<<<<< HEAD
                     .padding(.top,10)
-=======
->>>>>>> addHabit
-                
                 HStack{
-                    TextField("오늘의 습관 한줄평", text:$diary)
+                    TextField("오늘의 습관 한줄평", text:$content)
                         .padding()
                         .frame(width:280, height:55)
                         .background(Color(.white))
+                        .foregroundColor(Color("StrongGray-font"))
                         .cornerRadius(10)
                         .padding(.top,-10)
                         .padding(.bottom,10)
@@ -121,9 +118,9 @@ struct FeedView: View {
                     Button{
                         if let image = selectedImage {
                             if let imageData = image.jpegData(compressionQuality: 0.8){
-                                HabitManager.addNewDaily(habitID, habit?.goalCount ?? 0, imageData, diary, selectedDate, to: modelContext)
+                                HabitManager.addNewDiary(habitID, habit?.goalCount ?? 0, content, imageData, Date(), to: modelContext)
                                 selectedImage = nil
-                                diary = ""
+                                content = ""
                             }
                             else {return}
                         }
@@ -153,37 +150,45 @@ struct FeedView: View {
         }
         .navigationBarBackButtonHidden(true)
         .ignoresSafeArea()
-        .navigationBarBackButtonHidden(true)
         
     }
     
     func ScrollFeedView(_ habitData:HabitData, _ date:Date) -> some View{
         ScrollView(){
             let calendar = Calendar.current
-            if habitData.daily.count > 1 {
-                ForEach(habitData.sortedDaily.dropFirst()){ daily in
-                    if calendar.isDate(daily.date, equalTo: date, toGranularity: .day) {
-                        FeedContentView(daily)
-                    }
+                    
+            // habitData의 daily에서 날짜가 같은 항목만 필터링
+            let dailyData = habitData.sortedDaily.filter {
+                calendar.isDate($0.date, equalTo: date, toGranularity: .day)
+            }
+            
+            if let dailyData = dailyData.first {
+                ForEach(dailyData.sortedDiary){ diaryData in
+                    FeedContentView(diaryData)
                 }
             }
         }
     }
     
-    func FeedContentView(_ dailyData: Daily) ->some View{
+    func FeedContentView(_ diaryData: Diary) ->some View{
         ZStack{
             Color(.white)
             VStack{
                 HStack{
-                    Text("💧 3회")
-                        .font(.system(size: 16))
-                        .foregroundColor(Color("StrongBlue-font"))
+                    let calendar = Calendar.current
+                    let month = calendar.component(.month, from: diaryData.date)
+                    let day = calendar.component(.day, from: diaryData.date)
+                    let hour = calendar.component(.hour, from: diaryData.date)
+                    let minute = calendar.component(.minute, from: diaryData.date)
+                    Text("✏️ \(month)-\(day) \(hour)시 \(minute)분")
+                        .font(.system(size: 15))
+                        .foregroundColor(Color("LightGray"))
                         .padding(.leading,10)
                     Spacer()
                     Image("Icons/more")
                         .padding(.trailing,20)
                 }
-                if let uiImage = loadImage(from: dailyData.image) {
+                if let uiImage = loadImage(from: diaryData.image) {
                     Image(uiImage: uiImage)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -192,39 +197,23 @@ struct FeedView: View {
                 }
                 
                 HStack{
-                    Text(dailyData.diary)
+                    Text(diaryData.content)
                         .font(.system(size: 15))
                         .padding(.top, 5)
                         .padding(.leading, 10)
                     Spacer()
                 }
-                HStack{
-                    let calendar = Calendar.current
-                    let month = calendar.component(.month, from: dailyData.date)
-                    let day = calendar.component(.day, from: dailyData.date)
-                    let hour = calendar.component(.hour, from: dailyData.date)
-                    let minute = calendar.component(.minute, from: dailyData.date)
-                    Text("✏️ \(month)-\(day) \(hour)시 \(minute)분")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color("LightGray"))
-                        .padding(.leading,10)
-                        .padding(.top,5)
-                    Spacer()
-                }
             }
-            .padding([.top,.bottom], 20)
+            .padding([.top,.bottom], 15)
         }
         .frame(width:345)
         .cornerRadius(15)
-<<<<<<< HEAD
-=======
         .padding(.bottom,15)
     }
     
     func loadImage(from imageData: Data?) -> UIImage? {
         guard let imageData = imageData else { return nil }
         return UIImage(data: imageData)
->>>>>>> addHabit
     }
 }
 

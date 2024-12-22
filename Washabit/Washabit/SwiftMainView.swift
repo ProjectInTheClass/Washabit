@@ -3,6 +3,8 @@ import SwiftData
 
 struct SwiftMainView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.presentationMode) var presentationMode
+    
    @Query private var habits: [HabitData]
     // ------더미데이터로 보기 위해 윗줄 주석처리 & 아랫줄 주석 해제-------
 //    var habits :[HabitData] = HabitData.sampleData
@@ -29,7 +31,22 @@ struct SwiftMainView: View {
 //                        }
 //                        .padding(.trailing, 20)
 //                    }
-                    Spacer()
+                    NavigationLink(destination:GalleryView()){
+                        HStack{
+                            Spacer()
+                            ZStack{
+                                Color(.white)
+                                Image("Icons/drawer")
+                            }
+                            .frame(width:38, height:38)
+                            .cornerRadius(12)
+                            .shadow(color: Color.black.opacity(0.25), radius: 8, x: 0, y: 2)
+                        }
+                        .padding(.trailing,30)
+                    }
+                    .padding(.top,40)
+                    .padding(.bottom,40)
+                    
                     HStack{
                         if !habits.isEmpty{
                             Text("진행중인 목표")
@@ -207,6 +224,7 @@ struct SwiftMainView: View {
                                     todayDaily.count = todayDaily.count-1
                                 }
                             }
+                            
                         }
                     }
                     .padding(20)
@@ -266,38 +284,37 @@ struct SwiftMainView: View {
                         
                         //--------더미데이터로 보기 위해 여기부터-----------
                         
-                        if habit.sortedDaily.count == 1 {
+                        if let todayDaily = habit.sortedDaily.first(where: {
+                            Calendar.current.isDateInToday($0.date)
+                        }) {
                             NavigationLink(destination: FeedView(habitID: habit.id)){
-                                HStack{
-                                    Circle()
-                                        .strokeBorder(AngularGradient(gradient:Gradient(colors:[.white, Color("LightBlue"), .white]), center:.center), lineWidth:5)
+                                if let imageData = todayDaily.sortedDiary.first?.image{
+                                    let uiImage = loadImage(from: imageData)
+                                    if let convertedImage = uiImage{
+                                        Image(uiImage: convertedImage)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: cardWidth * 0.3, height: cardWidth * 0.3)
+                                            .clipShape(Circle())
+                                            .overlay(
+                                                Circle()
+                                                    .strokeBorder(AngularGradient(gradient:Gradient(colors:[.white, Color("LightBlue"), .white]), center:.center), lineWidth:5)
+                                            )
+                                            .padding(.trailing,20)
+                                    }
                                 }
-                                .frame(width:cardWidth * 0.3, height:cardWidth*0.3)
-                                .padding(.trailing,20)
-                            }
-                        }else{
-                            
-                            if let todayDaily = habit.sortedDaily.dropFirst().first(where: {
-                                Calendar.current.isDate($0.date, inSameDayAs: Date())
-                            }) {
-                                NavigationLink(destination: FeedView(habitID: habit.id)){
-                                    if let imageData = todayDaily.image{
-                                        let uiImage = loadImage(from: imageData)
-                                        if let convertedImage = uiImage{
-                                            Image(uiImage: convertedImage)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: cardWidth * 0.3, height: cardWidth * 0.3)
-                                                .clipShape(Circle())
-                                                .overlay(
-                                                    Circle()
-                                                        .strokeBorder(AngularGradient(gradient:Gradient(colors:[.white, Color("LightBlue"), .white]), center:.center), lineWidth:5)
-                                                )
-                                                .padding(.trailing,20)
+                                else{
+                                    NavigationLink(destination: FeedView(habitID: habit.id)){
+                                        HStack{
+                                            Circle()
+                                                .strokeBorder(AngularGradient(gradient:Gradient(colors:[.white, Color("LightBlue"), .white]), center:.center), lineWidth:5)
                                         }
+                                        .frame(width:cardWidth * 0.3, height:cardWidth*0.3)
+                                        .padding(.trailing,20)
                                     }
                                 }
                             }
+                            
                         }
                 }
                     //---------여기까지 주석 처리 & 아래 주석 해제 ----------
@@ -430,11 +447,11 @@ struct SwiftMainView: View {
                         .foregroundColor(.white)
                         .clipShape(Circle())
                 }
-
+                
                 Text("\(daily.count)")
                     .font(.system(size: 18))
                     .foregroundColor(.white)
-
+                
                 Button(action: {
                     daily.count += 1
                     HabitManager.saveContext(modelContext)
@@ -448,6 +465,7 @@ struct SwiftMainView: View {
                 }
             }
         }
+        
         .frame(width:270, height:20)
         .padding(10)
         .background(
