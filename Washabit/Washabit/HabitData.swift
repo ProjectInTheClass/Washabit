@@ -114,8 +114,31 @@ extension HabitData {
             habit.endDate < today
         }
         
-        return filteredHabits
+        //        return filteredHabits
+        return habits
     }
+    
+    func habitInformations(habit: HabitData) -> (maxCount: Int, minCount: Int) {
+        var maxCount = Int.min
+        var minCount = Int.max
+        
+        // 최고 기록과 최저 기록 계산
+        for daily in habit.daily {
+            maxCount = max(maxCount, daily.count)
+            minCount = min(minCount, daily.count)
+        }
+        
+        // 찾은 값이 없을 때 0으로 반환
+        if maxCount == Int.min {
+            maxCount = 0
+        }
+        if minCount == Int.max{
+            minCount = 0
+        }
+        
+        return (maxCount, minCount)
+    }
+}
 
 
     
@@ -159,7 +182,6 @@ extension HabitData {
 //            ]
 //        )
 //    ]
-}
 
 
 

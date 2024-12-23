@@ -22,6 +22,11 @@ struct FeedView: View {
     @State private var selectedImage: UIImage? = nil
     @State private var selectedDate:Date = Date()
     
+    init(initialDate: Date, habitID:UUID) {
+        self._selectedDate = State(initialValue: initialDate)
+        self.habitID = habitID
+    }
+    
     @State private var isNavigating = false
     
 //    private var habits:[HabitData] = HabitData.sampleData

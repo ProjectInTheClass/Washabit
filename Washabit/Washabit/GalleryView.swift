@@ -66,7 +66,7 @@ struct GalleryView: View {
                             if let imageData = habit.sortedDaily.first?.diary?.first?.image{
                                 let uiImage = loadImage(from: imageData)
                                 if let convertedImage = uiImage{
-                                    NavigationLink(destination:FinishedHabitView()){
+                                    NavigationLink(destination:FinishedHabitView(habitID: habit.id)){
                                         ZStack{
                                             Rectangle()
                                                 .frame(width:90, height:90)

@@ -11,9 +11,13 @@ import SwiftData
 struct FinishedHabitView: View {
     @Environment(\.presentationMode) var presentationMode
     @Query private var habits: [HabitData]
-//    @Binding var habitID: UUID
+    let habitID: UUID
+    private var habit: HabitData? {
+        habits.first(where: { $0.id == habitID })
+    }
     @State private var progress: CGFloat = 0.85
-    @State private var type: String = "success"
+    @State private var type: String = ""
+    
     
     var body:some View{
         ZStack{
@@ -35,15 +39,19 @@ struct FinishedHabitView: View {
                     .padding(.bottom,20)
                     .padding(.leading,5)
                 }
-                
-                Text("30분 운동하기")
-                    .font(.system(size:20, weight:.bold))
-                    .foregroundColor(Color("StrongGray-font"))
-                    .padding(.leading,5)
-                Text("2024.11.22 ~ 2024.12.20")
-                    .font(.system(size:14))
-                    .foregroundColor(Color("StrongGray-font"))
-                    .padding(.leading,5)
+                if let habit = habit {
+                    Text("\(habit.title)")
+                        .font(.system(size:20, weight:.bold))
+                        .foregroundColor(Color("StrongGray-font"))
+                        .padding(.leading,5)
+                    Text("\(formatDate(habit.startDate)) ~ \(formatDate(habit.endDate))")
+                        .font(.system(size:14))
+                        .foregroundColor(Color("StrongGray-font"))
+                        .padding(.leading,5)
+                }
+                else {
+                    // 습관이 없음.?
+                }
                 
                 ZStack{
                     Color(.white)
@@ -56,19 +64,25 @@ struct FinishedHabitView: View {
                                         .frame(width:16, height:14)
                                         .padding(.leading,5)
                                 }
+                                else{
+                                    Image("Icons/cross")
+                                        .resizable()
+                                        .frame(width:16, height:14)
+                                        .padding(.leading,5)
+                                }
                                 Spacer()
                                 HStack(spacing:5){
                                     Circle()
                                         .frame(width:12,height:12)
-                                        .foregroundColor(Color("StrongBlue-font"))
+                                        .foregroundColor(type == "success" ? Color("StrongBlue-font") : Color("StrongRed"))
                                     Circle()
                                         .frame(width:12, height:12)
-                                        .foregroundColor(Color("StrongBlue-font"))
+                                        .foregroundColor(type == "success" ? Color("StrongBlue-font") : Color("StrongRed"))
                                     
                                     Rectangle()
                                         .frame(width:30, height:15)
                                         .cornerRadius(3)
-                                        .foregroundColor(Color("StrongBlue-font"))
+                                        .foregroundColor(type == "success" ? Color("StrongBlue-font") : Color("StrongRed"))
                                 }
                                 
                             }
@@ -79,41 +93,67 @@ struct FinishedHabitView: View {
                         
                         Spacer()
                         
-                        VStack{
-                            Text("32일간의 습관 만들기 도전!")
-                                .font(.system(size:14, weight:.bold))
-                            HStack{
-                                Text("😆 최고 기록")
+                        if let habit = habit {
+                            let calendar = Calendar.current
+                            let daysDiff = calendar.dateComponents([.day], from: habit.startDate, to: habit.endDate).day ?? 0
+                            VStack{
+                                Text("\(daysDiff + 1) 일간의 습관 \(habit.type == "고치고 싶은" ? "고치기" : "만들기") 도전!")
                                     .font(.system(size:14, weight:.bold))
-                                    .padding(.leading,8)
-                                Spacer()
-                                Text("3회")
-                                    .font(.system(size:14))
-                                    .padding(.trailing,8)
+                                HStack{
+                                    if habit.type == "고치고 싶은"{
+                                        Text("😆 최저 기록")
+                                            .font(.system(size:14, weight:.bold))
+                                            .padding(.leading,8)
+                                        Spacer()
+                                        Text("\(habit.habitInformations(habit:habit).minCount)회")
+                                            .font(.system(size:14))
+                                            .padding(.trailing,8)
+                                    }
+                                    else{
+                                        Text("😆 최고 기록")
+                                            .font(.system(size:14, weight:.bold))
+                                            .padding(.leading,8)
+                                        Spacer()
+                                        Text("\(habit.habitInformations(habit:habit).maxCount)회")
+                                            .font(.system(size:14))
+                                            .padding(.trailing,8)
+                                    }
+                                }
+                                .padding(.top,5)
+                                
+                                HStack{
+                                    if habit.type == "고치고 싶은"{
+                                        Text("🥲 최고 기록")
+                                            .font(.system(size:14, weight:.bold))
+                                            .padding(.leading,8)
+                                        Spacer()
+                                        Text("\(habit.habitInformations(habit:habit).maxCount)회")
+                                            .font(.system(size:14))
+                                            .padding(.trailing,8)
+                                    }
+                                    else{
+                                        Text("🥲 최저 기록")
+                                            .font(.system(size:14, weight:.bold))
+                                            .padding(.leading,8)
+                                        Spacer()
+                                        Text("\(habit.habitInformations(habit:habit).minCount)회")
+                                            .font(.system(size:14))
+                                            .padding(.trailing,8)
+                                    }
+                                }
+//                                HStack{
+//                                    Text("🔥  연속 달성 최장기록")
+//                                        .font(.system(size:12, weight:.bold))
+//                                        .padding(.leading,8)
+//                                    Spacer()
+//                                    Text("15일")
+//                                        .font(.system(size:14))
+//                                        .padding(.trailing,8)
+//                                }
                             }
-                            .padding(.top,5)
-                            
-                            HStack{
-                                Text("🥲 최저 기록")
-                                    .font(.system(size:14, weight:.bold))
-                                    .padding(.leading,8)
-                                Spacer()
-                                Text("0회")
-                                    .font(.system(size:14))
-                                    .padding(.trailing,8)
-                            }
-                            HStack{
-                                Text("🔥  연속 달성 최장기록")
-                                    .font(.system(size:12, weight:.bold))
-                                    .padding(.leading,8)
-                                Spacer()
-                                Text("15일")
-                                    .font(.system(size:14))
-                                    .padding(.trailing,8)
-                            }
+                            .frame(width:170, height:130)
+                            .padding(.trailing,15)
                         }
-                        .frame(width:170, height:130)
-                        .padding(.trailing,15)
                     }
                 }
                 .frame(width:330, height:150)
@@ -122,12 +162,17 @@ struct FinishedHabitView: View {
                 .padding(.top,10)
                 .padding(.leading,5)
                 
-                FeedGalleryView()
+                if let habit = habit{
+                    FeedGalleryView(habit)
+                }
             }
             .padding(30)
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            updateHabitType()
+        }
     }
     
     struct WaterFillView: View {
@@ -144,7 +189,7 @@ struct FinishedHabitView: View {
         
                 WaterShape(level: progress, waveOffset: waveOffset)
                     .fill(LinearGradient(
-                        gradient: Gradient(colors: [Color("WashingMachine-water").opacity(0.1), Color("WashingMachine-water")]),
+                        gradient: Gradient(colors: type == "success" ? [Color("WashingMachine-water").opacity(0.1), Color("WashingMachine-water")] : [Color("StrongRed").opacity(0.1), Color("StrongRed").opacity(0.5)]),
                         startPoint: .top,
                         endPoint: .bottom
                     ))
@@ -153,17 +198,17 @@ struct FinishedHabitView: View {
                     .animation(.easeInOut(duration: 0.8), value: progress)
                 ZStack{
                     Circle()
-                        .strokeBorder(Color("WashingMachine-line"), lineWidth: 5)
+                        .strokeBorder(type == "success" ? Color("WashingMachine-line") : Color("MediumRed").opacity(0.4), lineWidth: 5)
                         .background(Circle().fill(Color.clear))
                         .frame(width: 105, height: 105)
                     Text("\(Int(progress * 100))%")
                         .font(.system(size:18, weight:.bold))
-                        .foregroundColor(Color("MediumBlue"))
+                        .foregroundColor(type == "success" ? Color("MediumBlue") : Color("MediumRed"))
                 }
                 Rectangle()
                     .frame(width:6, height:18)
                     .cornerRadius(4)
-                    .foregroundColor(Color("MediumBlue"))
+                    .foregroundColor(type == "success" ? Color("MediumBlue") : Color("MediumRed"))
                     .padding(.leading,90)
                     
             }
@@ -220,7 +265,7 @@ struct FinishedHabitView: View {
         }
     }
     
-    func FeedGalleryView() -> some View{
+    func FeedGalleryView(_ habit:HabitData) -> some View{
         ScrollView() { // 스크롤 가능한 화면
             let columns = [
                 GridItem(.flexible()), // 첫 번째 컬럼
@@ -228,25 +273,33 @@ struct FinishedHabitView: View {
                 GridItem(.flexible())  // 세 번째 컬럼
             ]
             LazyVGrid(columns: columns, spacing:20) { // 3개의 열, 각 열 간 간격 20
-                ForEach(0...6, id: \.self) { _ in
-                    VStack {
-                        ZStack{
-                            Rectangle()
-                                .frame(width:90, height:90)
-                                .cornerRadius(15)
-                                .foregroundColor(Color(.white))
-                                .shadow(color:Color.black.opacity(0.15), radius:6, x:0, y:2)
-                            Image("sample_image")
-                                .resizable()
-                                .frame(width:80, height:80)
-                                .cornerRadius(14)
-                            VStack{
-                                Text("11월")
-                                    .font(.system(size:16, weight:.bold))
-                                    .foregroundColor(Color("StrongGray-font"))
-                                Text("24일")
-                                    .font(.system(size:16, weight:.bold))
-                                    .foregroundColor(Color("StrongGray-font"))
+//                ForEach(0...6, id: \.self) { _ in
+                ForEach(habit.sortedDaily){ daily in
+                    let calendar = Calendar.current
+                    let month = calendar.component(.month, from: daily.date)
+                    let day = calendar.component(.day, from: daily.date)
+                    NavigationLink(destination:FeedView(initialDate: daily.date, habitID: habit.id)){
+                        VStack {
+                            ZStack{
+                                Rectangle()
+                                    .frame(width:90, height:90)
+                                    .cornerRadius(15)
+                                    .foregroundColor(Color(.white))
+                                    .shadow(color:Color.black.opacity(0.15), radius:6, x:0, y:2)
+                                if let uiImage = loadImage(from: daily.diary?.first?.image) {
+                                    Image(uiImage:uiImage)
+                                        .resizable()
+                                        .frame(width:80, height:80)
+                                        .cornerRadius(14)
+                                }
+                                VStack{
+                                    Text("\(month)월")
+                                        .font(.system(size:16, weight:.bold))
+                                        .foregroundColor(Color("StrongGray-font"))
+                                    Text("\(day)일")
+                                        .font(.system(size:16, weight:.bold))
+                                        .foregroundColor(Color("StrongGray-font"))
+                                }
                             }
                         }
                     }
@@ -257,8 +310,55 @@ struct FinishedHabitView: View {
         .padding(.top,10)
         .padding(.leading,4)
     }
+    
+    func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy.MM.dd" // 원하는 포맷 지정
+        return formatter.string(from: date)
+    }
+    
+    func loadImage(from imageData: Data?) -> UIImage? {
+        guard let imageData = imageData else { return nil }
+        return UIImage(data: imageData)
+    }
+    
+    private func updateHabitType() {
+        if let habit = habit {
+            type = isHabitSucceeded(habit: habit) ? "success" : "fail"
+        } else {
+            type = "fail" // 습관 데이터를 찾지 못한 경우 기본값
+        }
+    }
+    
+    func isHabitSucceeded(habit: HabitData) -> Bool {
+        let calendar = Calendar.current
+        var successDay = 0
+        let totalDay = calendar.dateComponents([.day], from: habit.startDate, to: habit.endDate).day ?? 0
+
+        for daily in habit.daily {
+            if habit.type == "고치고 싶은" {
+                if daily.count <= habit.goalCount {
+                    successDay += 1
+                }
+            } else {
+                if daily.count >= habit.goalCount {
+                    successDay += 1
+                }
+            }
+        }
+
+        if totalDay == 0 {
+            return false
+        }
+
+        progress = CGFloat(Double(successDay) / Double(totalDay+1))
+        print("\(successDay)")
+        print("\(totalDay+1)")
+        print("\((Double(successDay) / Double(totalDay+1)) * 100)")
+        return (Double(successDay) / Double(totalDay + 1)) * 100 >= Double(habit.goalCount)
+    }
 }
 
-#Preview{
-    FinishedHabitView()
-}
+//#Preview{
+//    FinishedHabitView()
+//}
