@@ -62,11 +62,11 @@ struct FeedView: View {
                             .padding(.leading,20)
                     }
                     Spacer()
-                    Text("모아보기>")
-                        .font(.system(size:14))
-                        .underline()
-                        .foregroundColor(Color("StrongGray-font"))
-                        .padding(.trailing,20)
+//                    Text("모아보기>")
+//                        .font(.system(size:14))
+//                        .underline()
+//                        .foregroundColor(Color("StrongGray-font"))
+//                        .padding(.trailing,20)
                 }
                 .padding(.top, 15)
                 

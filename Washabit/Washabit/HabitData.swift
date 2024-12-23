@@ -114,8 +114,8 @@ extension HabitData {
             habit.endDate < today
         }
         
-        //        return filteredHabits
-        return habits
+        return filteredHabits
+//        return habits
     }
     
     func habitInformations(habit: HabitData) -> (maxCount: Int, minCount: Int) {

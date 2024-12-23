@@ -67,7 +67,7 @@ struct FinishedHabitView: View {
                                 else{
                                     Image("Icons/cross")
                                         .resizable()
-                                        .frame(width:16, height:14)
+                                        .frame(width:14, height:14)
                                         .padding(.leading,5)
                                 }
                                 Spacer()
@@ -352,10 +352,8 @@ struct FinishedHabitView: View {
         }
 
         progress = CGFloat(Double(successDay) / Double(totalDay+1))
-        print("\(successDay)")
-        print("\(totalDay+1)")
         print("\((Double(successDay) / Double(totalDay+1)) * 100)")
-        return (Double(successDay) / Double(totalDay + 1)) * 100 >= Double(habit.goalCount)
+        return (Double(successDay) / Double(totalDay + 1)) * 100 >= Double(habit.goalPercentage)
     }
 }
 
